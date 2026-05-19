@@ -5,358 +5,300 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Marko Deric | Digital Portfolio</title>
-  <meta name="description" content="Professional portfolio of Marko Deric showcasing web projects, video work, branding, digital strategy, and creative technology." />
+  <meta name="description" content="Digital portfolio of Marko Deric, featuring web projects, dashboard UI, video work, content strategy, and creative technology." />
 
   <link rel="stylesheet" href="styles.css" />
   <script src="main.js" defer></script>
 </head>
 
-<body data-theme="prism">
-  <div class="cursor-glow" aria-hidden="true"></div>
+<body>
+  <header class="site-header" aria-label="Primary navigation">
+    <a class="brand-link" href="#top" aria-label="Go to top">
+      <span class="brand-symbol">MD</span>
+      <span class="brand-text">Marko Deric</span>
+    </a>
 
-  <div class="site-shell">
-    <header class="top-bar">
-      <a class="brand-mark text-only-brand" href="#top" aria-label="Go to top">
-        <span>Marko Deric</span>
-      </a>
+    <nav class="nav-pill" aria-label="Portfolio sections">
+      <a href="#capabilities">Capabilities</a>
+      <a href="#work">Work</a>
+      <a href="#profile">Profile</a>
+      <a href="#contact">Contact</a>
+    </nav>
 
-      <nav class="top-actions" aria-label="Contact links">
-        <a href="mailto:markoderic04@gmail.com">Email</a>
-        <a href="https://www.linkedin.com/in/markoderic/" target="_blank" rel="noopener">LinkedIn</a>
-        <button class="resume-nav-button" type="button" data-open-resume>Resume</button>
-        <div class="theme-switcher" aria-label="Portfolio theme">
-          <button class="theme-swatch theme-swatch-prism" type="button" data-theme-option="prism" aria-label="Use prism theme" aria-pressed="true"></button>
-          <button class="theme-swatch theme-swatch-ember" type="button" data-theme-option="ember" aria-label="Use ember theme" aria-pressed="false"></button>
-          <button class="theme-swatch theme-swatch-gallery" type="button" data-theme-option="gallery" aria-label="Use gallery theme" aria-pressed="false"></button>
-        </div>
-        <a class="primary-mobile" href="#contact">Connect</a>
-      </nav>
-    </header>
+    <a class="header-cta" href="mailto:markoderic04@gmail.com">
+      <span>Start a project</span>
+      <span class="cta-dots" aria-hidden="true"></span>
+    </a>
+  </header>
 
-    <main id="top">
-      <section class="hero">
-        <div class="hero-text reveal once-reveal">
-          <div class="eyebrow"><span class="pulse"></span> Digital portfolio · Web · Video · Strategy</div>
+  <main id="top">
+    <section class="hero" aria-labelledby="heroTitle">
+      <div class="hero-media" aria-hidden="true">
+        <img class="hero-shot hero-shot-one" src="finance-tracker-screenshot.png" alt="" />
+        <img class="hero-shot hero-shot-two" src="productcatalogscreenshot.jpeg" alt="" />
+        <video class="hero-shot hero-shot-three" autoplay muted loop playsinline preload="metadata">
+          <source src="personalbrandingvideo.mp4" type="video/mp4" />
+        </video>
+      </div>
 
-          <h1>Sharper digital work with <span class="gradient-text">premium motion.</span></h1>
+      <div class="hero-inner">
+        <p class="eyebrow">Digital portfolio / web / content / strategy</p>
+        <h1 id="heroTitle">Marko Deric</h1>
+        <p class="hero-statement">
+          I build polished digital experiences across websites, dashboards, video, and social content, with a focus on clear presentation and useful interaction.
+        </p>
 
-          <p class="hero-copy">
-            I’m an interactive media and design major building websites, dashboards, video projects,
-            and creative brand experiences that feel polished from the first click.
-          </p>
-
-          <div class="hero-actions">
-            <a class="button primary" href="#work">View selected work</a>
-            <a class="button" href="#story">See my approach</a>
-            <button class="button resume-hero-button" type="button" data-open-resume>View resume</button>
-          </div>
-        </div>
-
-        <div class="hero-panel parallax reveal once-reveal" data-speed="0.04" aria-label="Portfolio preview graphic">
-          <div class="screen-card screen-main">
-            <div class="screen-header">
-              <div class="traffic"><span></span><span></span><span></span></div>
-              <div class="mini-label">Live Work Preview</div>
-            </div>
-
-            <div class="hero-snapshot-grid">
-              <a class="hero-snapshot hero-snapshot-large" href="https://markoderic.github.io/finance-tracker/" target="_blank" rel="noopener" aria-label="Open PulseBudget finance tracker">
-                <img src="finance-tracker-screenshot.png" alt="PulseBudget finance tracker dashboard preview" />
-              </a>
-              <a class="hero-snapshot" href="https://ims322-sheffield-2026-spring.github.io/product-catalog-markoderic/" target="_blank" rel="noopener" aria-label="Open Streetwear Product Catalog">
-                <img src="productcatalogscreenshot.jpeg" alt="Streetwear Product Catalog preview" />
-              </a>
-              <div class="hero-signal-card">
-                <span>Built with</span>
-                <strong>HTML · CSS · JS</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="screen-card floating-note">
-            <div class="mini-label">Now Featured</div>
-            <p>PulseBudget brings a stronger dashboard project into the selected work lineup.</p>
-          </div>
-
-          <div class="screen-card floating-stat">
-            <strong>03</strong>
-            <p>Selected project slots for web builds, dashboard UI, and creative media.</p>
-          </div>
-        </div>
-      </section>
-
-      <div class="marquee-wrap" aria-hidden="true">
-        <div class="marquee">
-          <span>WEB DESIGN</span><span>FRONT-END DEVELOPMENT</span><span>VIDEO CONTENT</span><span>DIGITAL STRATEGY</span><span>BRANDING</span><span>CREATIVE TECHNOLOGY</span>
-          <span>WEB DESIGN</span><span>FRONT-END DEVELOPMENT</span><span>VIDEO CONTENT</span><span>DIGITAL STRATEGY</span><span>BRANDING</span><span>CREATIVE TECHNOLOGY</span>
+        <div class="hero-actions" aria-label="Primary actions">
+          <a class="button button-light" href="#work">View work</a>
+          <button class="button button-ghost" type="button" data-open-resume>Resume</button>
         </div>
       </div>
 
-      <section class="section" id="story">
-        <div class="section-heading reveal once-reveal">
-          <div>
-            <div class="section-kicker">What I bring</div>
-            <h2>Not just projects. A full digital presentation.</h2>
+    </section>
+
+    <section class="section section-light" id="capabilities" aria-labelledby="capabilitiesTitle">
+      <div class="section-heading reveal">
+        <p class="section-kicker">Selected capabilities</p>
+        <h2 id="capabilitiesTitle">A compact studio-style range for digital work.</h2>
+      </div>
+
+      <div class="service-grid">
+        <a class="service-card reveal" href="#work" aria-label="View web interface work">
+          <img src="productcatalogscreenshot.jpeg" alt="" />
+          <div class="service-overlay"></div>
+          <div class="service-head">
+            <h3>Web Interfaces</h3>
+            <span>/4 focus areas</span>
           </div>
-
-          <p>
-            This portfolio is built to make each project feel polished and intentional. Instead of just listing work,
-            every piece can be framed around the problem, the creative decision, and the result.
-          </p>
-        </div>
-
-        <div class="feature-grid">
-          <article class="feature-card reveal once-reveal">
-            <span class="feature-number">01</span>
-            <div>
-              <h3>Modern web execution</h3>
-              <p>Responsive websites built with clean structure, strong visuals, smooth interactions, and a focus on user experience.</p>
-            </div>
-          </article>
-
-          <article class="feature-card reveal once-reveal">
-            <span class="feature-number">02</span>
-            <div>
-              <h3>Content that sells the idea</h3>
-              <p>Videos, social content, and visual storytelling presented in a way that shows taste, consistency, and audience awareness.</p>
-            </div>
-          </article>
-
-          <article class="feature-card reveal once-reveal">
-            <span class="feature-number">03</span>
-            <div>
-              <h3>Business-minded creativity</h3>
-              <p>Work is not just made to look good. It is framed around credibility, attention, clarity, and real-world communication.</p>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" id="work">
-        <div class="section-heading reveal once-reveal">
-          <div>
-            <div class="section-kicker">Selected work</div>
-            <h2>Projects with a stronger story.</h2>
+          <div class="service-tags" aria-hidden="true">
+            <span>Responsive Layout</span>
+            <span>Product Pages</span>
+            <span>Interaction Polish</span>
+            <span>Visual QA</span>
           </div>
+        </a>
 
-          <p>
-            A collection of selected projects that show how I approach design, development, media, and digital presentation.
-            Each project is included to show the idea behind the work, the tools used, and the final experience.
-          </p>
-        </div>
-
-        <div class="projects-stack">
-          <!-- PROJECT SLOT 1: Fictional shoe store product catalog. -->
-          <article class="project-card reveal">
-            <div class="project-media">
-              <a href="https://ims322-sheffield-2026-spring.github.io/product-catalog-markoderic/" target="_blank" rel="noopener" aria-label="Open Streetwear Product Catalog">
-                <img src="productcatalogscreenshot.jpeg" alt="Screenshot of the Streetwear Product Catalog website" />
-              </a>
-            </div>
-
-            <div class="project-content">
-              <div class="slot-label">Website Project</div>
-              <h3>Streetwear Product Catalog</h3>
-
-              <p>
-                A fictional shoe store product catalog built with HTML, CSS, and JavaScript. The site presents a clean product grid,
-                shoe images, pricing, and a polished storefront layout designed to feel simple, modern, and easy to browse.
-              </p>
-
-              <div class="tag-row">
-                <span class="tag">HTML</span>
-                <span class="tag">CSS</span>
-                <span class="tag">JavaScript</span>
-                <span class="tag">Product Catalog</span>
-              </div>
-
-              <a class="button primary" href="https://ims322-sheffield-2026-spring.github.io/product-catalog-markoderic/" target="_blank" rel="noopener">View website</a>
-            </div>
-          </article>
-
-          <!-- PROJECT SLOT 2: PulseBudget finance tracker. -->
-          <article class="project-card reveal">
-            <div class="project-media finance-media">
-              <a href="https://markoderic.github.io/finance-tracker/" target="_blank" rel="noopener" aria-label="Open PulseBudget Finance Tracker">
-                <img src="finance-tracker-screenshot.png" alt="Screenshot of the PulseBudget finance tracker website" />
-              </a>
-            </div>
-
-            <div class="project-content">
-              <div class="slot-label">Finance Dashboard</div>
-              <h3>PulseBudget Finance Tracker</h3>
-
-              <p>
-                A personal finance dashboard that brings spending, bills, savings goals, debt, subscriptions,
-                and cash flow into one polished visual interface. The project focuses on making everyday money
-                decisions easier to scan, understand, and act on.
-              </p>
-
-              <div class="tag-row">
-                <span class="tag">Dashboard UI</span>
-                <span class="tag">Personal Finance</span>
-                <span class="tag">Data Visualization</span>
-                <span class="tag">Interactive Web</span>
-              </div>
-
-              <a class="button primary" href="https://markoderic.github.io/finance-tracker/" target="_blank" rel="noopener">View website</a>
-            </div>
-          </article>
-
-          <!-- PROJECT SLOT 3: Replace this entire article with your third real project. -->
-          <article class="project-card reveal">
-            <div class="project-media placeholder-media">
-              <!-- Put your project screenshot or image here. -->
-
-              <div class="project-placeholder">
-                <span>Project Slot 03</span>
-                <h3>Your project goes here</h3>
-                <p>Use this for video work, YouTube, social content, or a creative media project.</p>
-              </div>
-            </div>
-
-            <div class="project-content">
-              <div class="slot-label">Project 03</div>
-              <h3>Your project title</h3>
-
-              <p>
-                Project description goes here. We can frame this around your creative process, audience, and final result.
-              </p>
-
-              <div class="tag-row">
-                <span class="tag">Skill 1</span>
-                <span class="tag">Skill 2</span>
-                <span class="tag">Skill 3</span>
-                <span class="tag">Tool</span>
-              </div>
-
-              <a class="button primary" href="#" target="_blank" rel="noopener">View project</a>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="section-heading reveal once-reveal">
-          <div>
-            <div class="section-kicker">Media</div>
-            <h2>Content that adds personality.</h2>
+        <a class="service-card reveal" href="#work" aria-label="View dashboard interface work">
+          <img src="finance-tracker-screenshot.png" alt="" />
+          <div class="service-overlay"></div>
+          <div class="service-head">
+            <h3>Dashboard UI</h3>
+            <span>/5 focus areas</span>
           </div>
+          <div class="service-tags" aria-hidden="true">
+            <span>Data Stories</span>
+            <span>Scannable Layouts</span>
+            <span>State Design</span>
+            <span>Financial Tools</span>
+            <span>UI Systems</span>
+          </div>
+        </a>
 
-          <p>
-            This section highlights creative media work, personal branding, and content that shows personality beyond traditional project screenshots.
-          </p>
+        <a class="service-card reveal" href="#media" aria-label="View video and media work">
+          <video autoplay muted loop playsinline preload="metadata">
+            <source src="personalbrandingvideo.mp4" type="video/mp4" />
+          </video>
+          <div class="service-overlay"></div>
+          <div class="service-head">
+            <h3>Video Content</h3>
+            <span>/4 focus areas</span>
+          </div>
+          <div class="service-tags" aria-hidden="true">
+            <span>Personal Branding</span>
+            <span>Editing Rhythm</span>
+            <span>Short-form Cuts</span>
+            <span>Story Framing</span>
+          </div>
+        </a>
+
+        <a class="service-card reveal" href="#profile" aria-label="View professional profile">
+          <img src="markodericresume2026.png" alt="" />
+          <div class="service-overlay"></div>
+          <div class="service-head">
+            <h3>Professional Story</h3>
+            <span>/3 focus areas</span>
+          </div>
+          <div class="service-tags" aria-hidden="true">
+            <span>Resume</span>
+            <span>Career Framing</span>
+            <span>Presentation</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="statement-band" aria-label="Portfolio approach">
+      <div class="statement-inner reveal">
+        <p>Approach</p>
+        <h2>Make the work easy to trust before asking anyone to click deeper.</h2>
+        <span>
+          The portfolio is structured like a finished studio page: concise sections, image-led proof, quiet motion, and enough room for new work to join naturally as the career grows.
+        </span>
+      </div>
+    </section>
+
+    <section class="section section-light" id="work" aria-labelledby="workTitle">
+      <div class="section-heading split-heading reveal">
+        <div>
+          <p class="section-kicker">Latest work</p>
+          <h2 id="workTitle">Projects that show range without overexplaining.</h2>
         </div>
+        <p>
+          Selected projects across web builds, interface design, and media. Each piece is framed around what it needed to communicate and how the final experience supports that goal.
+        </p>
+      </div>
 
-        <div class="video-grid">
-          <!-- VIDEO SLOT: Personal branding video preview. Keep personalbrandingvideo.mp4 in the same folder as index.html. -->
-          <article class="video-card reveal once-reveal">
-            <video class="featured-video-player" controls preload="metadata" playsinline>
+      <div class="work-list">
+        <article class="work-card work-card-featured reveal">
+          <a class="work-media" href="https://markoderic.github.io/finance-tracker/" target="_blank" rel="noopener" aria-label="Open PulseBudget Finance Tracker">
+            <img src="finance-tracker-screenshot.png" alt="PulseBudget finance tracker interface" />
+          </a>
+          <div class="work-copy">
+            <div class="work-meta">
+              <span>01</span>
+              <span>Dashboard Interface</span>
+            </div>
+            <h3>PulseBudget Finance Tracker</h3>
+            <p>
+              A personal finance dashboard designed to make spending, bills, savings, debt, subscriptions, and cash flow feel organized at a glance.
+            </p>
+            <div class="work-details">
+              <span>Dashboard UI</span>
+              <span>Personal finance</span>
+              <span>Interactive web</span>
+            </div>
+            <a class="text-link" href="https://markoderic.github.io/finance-tracker/" target="_blank" rel="noopener">View website</a>
+          </div>
+        </article>
+
+        <article class="work-card reveal">
+          <a class="work-media" href="https://ims322-sheffield-2026-spring.github.io/product-catalog-markoderic/" target="_blank" rel="noopener" aria-label="Open Streetwear Product Catalog">
+            <img src="productcatalogscreenshot.jpeg" alt="Streetwear product catalog website interface" />
+          </a>
+          <div class="work-copy">
+            <div class="work-meta">
+              <span>02</span>
+              <span>Product Website</span>
+            </div>
+            <h3>Streetwear Product Catalog</h3>
+            <p>
+              A clean storefront concept built with HTML, CSS, and JavaScript, focused on product browsing, pricing clarity, and an approachable catalog layout.
+            </p>
+            <div class="work-details">
+              <span>HTML</span>
+              <span>CSS</span>
+              <span>JavaScript</span>
+            </div>
+            <a class="text-link" href="https://ims322-sheffield-2026-spring.github.io/product-catalog-markoderic/" target="_blank" rel="noopener">View website</a>
+          </div>
+        </article>
+
+        <article class="work-card reveal" id="media">
+          <div class="work-media">
+            <video controls preload="metadata" playsinline>
               <source src="personalbrandingvideo.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
-
-            <div class="video-info">
-              <h3>Personal Branding Video</h3>
-              <p>A short personal brand introduction created with Premiere Pro and CapCut. This video explains what I do, how I work, and the kind of creative digital projects I like building.</p>
+          </div>
+          <div class="work-copy">
+            <div class="work-meta">
+              <span>03</span>
+              <span>Brand Film</span>
             </div>
-          </article>
-
-          <div class="side-stack">
-            <article class="mini-card youtube-card reveal once-reveal">
-              <a class="youtube-profile-link" href="https://www.youtube.com/@animalfeedreal" target="_blank" rel="noopener" aria-label="Open Animal Feed YouTube channel">
-                <img src="animalfeedpfp.jpeg" alt="Animal Feed YouTube channel profile picture" />
-              </a>
-              <div>
-                <h3>Animal Feed</h3>
-                <p>A short funny animal moments channel focused on quick, entertaining clips. Click the profile picture to visit the channel.</p>
-              </div>
-            </article>
-
-            <article class="mini-card reveal once-reveal">
-              <h3>Short-form Content</h3>
-              <p>Your short-form content, social media work, or video editing examples can go here.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="section-heading reveal once-reveal">
-          <div>
-            <div class="section-kicker">Process</div>
-            <h2>How I turn ideas into finished work.</h2>
-          </div>
-
-          <p>
-            Every finished piece starts with a clear goal, a strong concept, and careful refinement from first idea to final presentation.
-          </p>
-        </div>
-
-        <div class="process">
-          <article class="process-step reveal once-reveal">
-            <span>01</span>
-            <h3>Define the goal</h3>
-            <p>I start by understanding the audience, the message, and what the project needs to accomplish.</p>
-          </article>
-
-          <article class="process-step reveal once-reveal">
-            <span>02</span>
-            <h3>Shape the concept</h3>
-            <p>I turn the goal into a clear creative direction with structure, layout, and visual references.</p>
-          </article>
-
-          <article class="process-step reveal once-reveal">
-            <span>03</span>
-            <h3>Build the experience</h3>
-            <p>I create the final website, content, or strategy with attention to detail and presentation.</p>
-          </article>
-
-          <article class="process-step reveal once-reveal">
-            <span>04</span>
-            <h3>Refine the finish</h3>
-            <p>I review the work for clarity, polish, responsiveness, and the overall impression it gives.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" id="contact">
-        <div class="contact-card reveal once-reveal">
-          <div>
-            <div class="section-kicker">Connect</div>
-            <h2>Let’s build something worth remembering.</h2>
-
+            <h3>Personal Branding Video</h3>
             <p>
-              I’m open to internships, creative opportunities, campus media work, social content projects, web projects,
-              and collaborations that combine business, design, and technology.
+              A concise introduction video shaped around personality, creative direction, and the type of digital work I want to keep building.
             </p>
+            <div class="work-details">
+              <span>Premiere Pro</span>
+              <span>CapCut</span>
+              <span>Storytelling</span>
+            </div>
           </div>
+        </article>
 
-          <div class="contact-links">
-            <a class="contact-link" href="mailto:markoderic04@gmail.com">
-              <span>Email</span>
-              <strong>markoderic04@gmail.com</strong>
-            </a>
-
-            <a class="contact-link" href="https://www.linkedin.com/in/markoderic/" target="_blank" rel="noopener">
-              <span>LinkedIn</span>
-              <strong>Connect →</strong>
-            </a>
-
-            <a class="contact-link" href="https://www.youtube.com/@animalfeedreal" target="_blank" rel="noopener">
+        <article class="work-card reveal">
+          <a class="work-media media-crop" href="https://www.youtube.com/@animalfeedreal" target="_blank" rel="noopener" aria-label="Open Animal Feed YouTube channel">
+            <img src="animalfeedpfp.jpeg" alt="Animal Feed channel profile artwork" />
+          </a>
+          <div class="work-copy">
+            <div class="work-meta">
+              <span>04</span>
+              <span>Content Channel</span>
+            </div>
+            <h3>Animal Feed Short-form Channel</h3>
+            <p>
+              A social content experiment built around fast, entertaining clips, recognizable channel identity, and lightweight audience attention.
+            </p>
+            <div class="work-details">
               <span>YouTube</span>
-              <strong>Watch →</strong>
-            </a>
+              <span>Short-form content</span>
+              <span>Channel identity</span>
+            </div>
+            <a class="text-link" href="https://www.youtube.com/@animalfeedreal" target="_blank" rel="noopener">Visit channel</a>
           </div>
-        </div>
-      </section>
-    </main>
+        </article>
+      </div>
+    </section>
 
-    <footer>
-      <p>© <span id="year"></span> Marko Deric. Built with HTML, CSS, and JavaScript.</p>
-      <p>Designed for recruiters, clients, and creative opportunities.</p>
-    </footer>
-  </div>
+    <section class="section profile-section" id="profile" aria-labelledby="profileTitle">
+      <div class="profile-copy reveal">
+        <p class="section-kicker">Profile</p>
+        <h2 id="profileTitle">A portfolio built to grow with the work.</h2>
+        <p>
+          I am an interactive media and design major interested in the overlap between front-end development, creative direction, business communication, and digital storytelling.
+        </p>
+
+        <div class="profile-points">
+          <span>Web builds</span>
+          <span>Dashboard and interface design</span>
+          <span>Video editing and content systems</span>
+          <span>Brand-minded presentation</span>
+        </div>
+
+        <button class="button button-dark" type="button" data-open-resume>View resume</button>
+      </div>
+
+      <button class="resume-preview reveal" type="button" data-open-resume aria-label="Open resume preview">
+        <img src="markodericresume2026.png" alt="Resume preview for Marko Deric" />
+      </button>
+    </section>
+
+    <section class="contact-section" id="contact" aria-labelledby="contactTitle">
+      <div class="contact-inner reveal">
+        <p class="section-kicker">Contact</p>
+        <h2 id="contactTitle">Let us build the next version with purpose.</h2>
+        <p>
+          I am open to internships, creative opportunities, campus media work, social content projects, web projects, and collaborations that combine business, design, and technology.
+        </p>
+
+        <div class="contact-links">
+          <a href="mailto:markoderic04@gmail.com">
+            <span>Email</span>
+            <strong>markoderic04@gmail.com</strong>
+          </a>
+          <a href="https://www.linkedin.com/in/markoderic/" target="_blank" rel="noopener">
+            <span>LinkedIn</span>
+            <strong>Connect</strong>
+          </a>
+          <a href="https://www.youtube.com/@animalfeedreal" target="_blank" rel="noopener">
+            <span>YouTube</span>
+            <strong>Watch</strong>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <a class="floating-action" href="mailto:markoderic04@gmail.com" aria-label="Email Marko Deric">
+    <span>Start a project</span>
+    <span class="cta-dots" aria-hidden="true"></span>
+  </a>
+
+  <footer class="site-footer">
+    <p>&copy; <span id="year"></span> Marko Deric</p>
+    <p>Built with HTML, CSS, and JavaScript.</p>
+  </footer>
 
   <div class="resume-modal" id="resumeModal" aria-hidden="true">
     <div class="resume-backdrop" data-close-resume></div>
@@ -370,7 +312,7 @@
 
         <div class="resume-modal-actions">
           <a class="resume-download" href="markodericresume2026.pdf" target="_blank" rel="noopener">Open PDF</a>
-          <button class="resume-close" type="button" aria-label="Close resume" data-close-resume>×</button>
+          <button class="resume-close" type="button" aria-label="Close resume" data-close-resume>Close</button>
         </div>
       </div>
 
@@ -379,6 +321,5 @@
       </div>
     </section>
   </div>
-
 </body>
 </html>
