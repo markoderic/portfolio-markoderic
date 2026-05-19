@@ -11,7 +11,7 @@
   <script src="main.js" defer></script>
 </head>
 
-<body>
+<body data-theme="prism">
   <div class="cursor-glow" aria-hidden="true"></div>
 
   <div class="site-shell">
@@ -24,6 +24,11 @@
         <a href="mailto:markoderic04@gmail.com">Email</a>
         <a href="https://www.linkedin.com/in/markoderic/" target="_blank" rel="noopener">LinkedIn</a>
         <button class="resume-nav-button" type="button" data-open-resume>Resume</button>
+        <div class="theme-switcher" aria-label="Portfolio theme">
+          <button class="theme-swatch theme-swatch-prism" type="button" data-theme-option="prism" aria-label="Use prism theme" aria-pressed="true"></button>
+          <button class="theme-swatch theme-swatch-ember" type="button" data-theme-option="ember" aria-label="Use ember theme" aria-pressed="false"></button>
+          <button class="theme-swatch theme-swatch-gallery" type="button" data-theme-option="gallery" aria-label="Use gallery theme" aria-pressed="false"></button>
+        </div>
         <a class="primary-mobile" href="#contact">Connect</a>
       </nav>
     </header>
@@ -33,11 +38,11 @@
         <div class="hero-text reveal once-reveal">
           <div class="eyebrow"><span class="pulse"></span> Digital portfolio · Web · Video · Strategy</div>
 
-          <h1>Building digital work<br />that feels <span class="gradient-text">premium.</span></h1>
+          <h1>Sharper digital work with <span class="gradient-text">premium motion.</span></h1>
 
           <p class="hero-copy">
-            I’m an interactive media and design major who likes building creative digital projects,
-            making videos, and spending time outside in nature.
+            I’m an interactive media and design major building websites, dashboards, video projects,
+            and creative brand experiences that feel polished from the first click.
           </p>
 
           <div class="hero-actions">
@@ -47,24 +52,35 @@
           </div>
         </div>
 
-        <div class="hero-panel parallax reveal once-reveal" data-speed="0.08" aria-label="Portfolio preview graphic">
+        <div class="hero-panel parallax reveal once-reveal" data-speed="0.04" aria-label="Portfolio preview graphic">
           <div class="screen-card screen-main">
             <div class="screen-header">
               <div class="traffic"><span></span><span></span><span></span></div>
-              <div class="mini-label">Creative Preview</div>
+              <div class="mini-label">Live Work Preview</div>
             </div>
 
-            <div class="mock-visual"></div>
+            <div class="hero-snapshot-grid">
+              <a class="hero-snapshot hero-snapshot-large" href="https://markoderic.github.io/finance-tracker/" target="_blank" rel="noopener" aria-label="Open PulseBudget finance tracker">
+                <img src="finance-tracker-screenshot.png" alt="PulseBudget finance tracker dashboard preview" />
+              </a>
+              <a class="hero-snapshot" href="https://ims322-sheffield-2026-spring.github.io/product-catalog-markoderic/" target="_blank" rel="noopener" aria-label="Open Streetwear Product Catalog">
+                <img src="productcatalogscreenshot.jpeg" alt="Streetwear Product Catalog preview" />
+              </a>
+              <div class="hero-signal-card">
+                <span>Built with</span>
+                <strong>HTML · CSS · JS</strong>
+              </div>
+            </div>
           </div>
 
           <div class="screen-card floating-note">
-            <div class="mini-label">Focus</div>
-            <p>Web projects, video work, and creative media presented in one place.</p>
+            <div class="mini-label">Now Featured</div>
+            <p>PulseBudget brings a stronger dashboard project into the selected work lineup.</p>
           </div>
 
           <div class="screen-card floating-stat">
-            <strong>01</strong>
-            <p>A portfolio built to feel like a polished digital experience.</p>
+            <strong>03</strong>
+            <p>Selected project slots for web builds, dashboard UI, and creative media.</p>
           </div>
         </div>
       </section>
@@ -158,34 +174,32 @@
             </div>
           </article>
 
-          <!-- PROJECT SLOT 2: Replace this entire article with your second real project. -->
+          <!-- PROJECT SLOT 2: PulseBudget finance tracker. -->
           <article class="project-card reveal">
-            <div class="project-media placeholder-media">
-              <!-- Put your project screenshot or image here. -->
-
-              <div class="project-placeholder">
-                <span>Project Slot 02</span>
-                <h3>Your project goes here</h3>
-                <p>Use this for a website, class project, brand project, or design project.</p>
-              </div>
+            <div class="project-media finance-media">
+              <a href="https://markoderic.github.io/finance-tracker/" target="_blank" rel="noopener" aria-label="Open PulseBudget Finance Tracker">
+                <img src="finance-tracker-screenshot.png" alt="Screenshot of the PulseBudget finance tracker website" />
+              </a>
             </div>
 
             <div class="project-content">
-              <div class="slot-label">Project 02</div>
-              <h3>Your project title</h3>
+              <div class="slot-label">Finance Dashboard</div>
+              <h3>PulseBudget Finance Tracker</h3>
 
               <p>
-                Project description goes here. We will make this sound professional, specific, and recruiter-ready.
+                A personal finance dashboard that brings spending, bills, savings goals, debt, subscriptions,
+                and cash flow into one polished visual interface. The project focuses on making everyday money
+                decisions easier to scan, understand, and act on.
               </p>
 
               <div class="tag-row">
-                <span class="tag">Skill 1</span>
-                <span class="tag">Skill 2</span>
-                <span class="tag">Skill 3</span>
-                <span class="tag">Tool</span>
+                <span class="tag">Dashboard UI</span>
+                <span class="tag">Personal Finance</span>
+                <span class="tag">Data Visualization</span>
+                <span class="tag">Interactive Web</span>
               </div>
 
-              <a class="button primary" href="#" target="_blank" rel="noopener">View project</a>
+              <a class="button primary" href="https://markoderic.github.io/finance-tracker/" target="_blank" rel="noopener">View website</a>
             </div>
           </article>
 
