@@ -377,7 +377,8 @@
         <button class="resume-close" type="button" aria-label="Close project form" data-close-project>Close</button>
       </div>
 
-      <form class="project-form" data-project-form>
+      <form class="project-form" action="https://formspree.io/f/xpqnqaaa" method="POST" data-project-form>
+        <input type="hidden" name="_subject" value="New portfolio project inquiry" />
         <label>
           <span>Name</span>
           <input name="name" type="text" autocomplete="name" required />
@@ -428,8 +429,8 @@
           <textarea name="details" rows="5" placeholder="What are you trying to make, who is it for, and what does success look like?" required></textarea>
         </label>
 
-        <button class="button button-dark form-wide" type="submit">Send project brief</button>
-        <p class="form-status form-wide" data-form-status></p>
+        <button class="button button-dark form-wide" type="submit" data-submit-button>Send project brief</button>
+        <p class="form-status form-wide" role="status" aria-live="polite" data-form-status></p>
       </form>
     </section>
   </div>

@@ -260,35 +260,69 @@ window.addEventListener("keydown", (event) => {
 
 const projectForm = document.querySelector("[data-project-form]");
 const formStatus = document.querySelector("[data-form-status]");
+const submitButton = document.querySelector("[data-submit-button]");
+
+function setFormStatus(message, type = "") {
+  if (!formStatus) return;
+
+  formStatus.textContent = message;
+  formStatus.classList.remove("success", "error");
+
+  if (type) {
+    formStatus.classList.add(type);
+  }
+}
 
 if (projectForm) {
-  projectForm.addEventListener("submit", (event) => {
+  projectForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+
+    const endpoint = projectForm.getAttribute("action") || "";
+    if (!endpoint || endpoint.includes("YOUR_FORM_ID")) {
+      setFormStatus("Add your Formspree form endpoint before this form can send.", "error");
+      return;
+    }
 
     const formData = new FormData(projectForm);
     const name = String(formData.get("name") || "").trim();
-    const email = String(formData.get("email") || "").trim();
-    const type = String(formData.get("type") || "").trim();
-    const timeline = String(formData.get("timeline") || "").trim();
-    const budget = String(formData.get("budget") || "").trim();
-    const details = String(formData.get("details") || "").trim();
 
-    const subject = encodeURIComponent(`Project inquiry from ${name || "portfolio visitor"}`);
-    const bodyText = [
-      `Name: ${name}`,
-      `Email: ${email}`,
-      `Project type: ${type}`,
-      `Timeline: ${timeline}`,
-      `Budget: ${budget || "Not specified"}`,
-      "",
-      "Project details:",
-      details
-    ].join("\n");
+    formData.set("_subject", `Project inquiry from ${name || "portfolio visitor"}`);
 
-    if (formStatus) {
-      formStatus.textContent = "Opening your email app with the project brief filled in.";
+    projectForm.classList.add("is-sending");
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = "Sending...";
     }
+    setFormStatus("Sending your project brief...");
 
-    window.location.href = `mailto:markoderic04@gmail.com?subject=${subject}&body=${encodeURIComponent(bodyText)}`;
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        const message = data.errors && data.errors.length
+          ? data.errors.map((error) => error.message).join(" ")
+          : "Something went wrong. Please try again or email me directly.";
+
+        throw new Error(message);
+      }
+
+      projectForm.reset();
+      setFormStatus("Project brief sent. I will get back to you soon.", "success");
+    } catch (error) {
+      setFormStatus(error.message || "Something went wrong. Please try again or email me directly.", "error");
+    } finally {
+      projectForm.classList.remove("is-sending");
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = "Send project brief";
+      }
+    }
   });
 }
