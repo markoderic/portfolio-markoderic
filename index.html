@@ -11,28 +11,81 @@
   <script src="main.js" defer></script>
 </head>
 
-<body>
+<body class="is-loading">
+  <div class="page-loader" aria-hidden="true">
+    <div class="loader-stage">
+      <p>Entering portfolio</p>
+      <div class="loader-name" data-text="Marko Deric">Marko Deric</div>
+      <div class="loader-track"><span></span></div>
+    </div>
+  </div>
+
   <header class="site-header" aria-label="Primary navigation">
     <a class="brand-link" href="#top" aria-label="Go to top">
-      <span class="brand-symbol">MD</span>
+      <span class="brand-cube" aria-hidden="true">
+        <span class="cube-face cube-front">M</span>
+        <span class="cube-face cube-back">D</span>
+        <span class="cube-face cube-right"></span>
+        <span class="cube-face cube-left"></span>
+        <span class="cube-face cube-top"></span>
+        <span class="cube-face cube-bottom"></span>
+      </span>
       <span class="brand-text">Marko Deric</span>
     </a>
 
-    <nav class="nav-pill" aria-label="Portfolio sections">
-      <a href="#capabilities">Capabilities</a>
-      <a href="#work">Work</a>
-      <a href="#profile">Profile</a>
-      <a href="#contact">Contact</a>
-    </nav>
+    <div class="nav-shell open" data-nav-root>
+      <button class="nav-toggle" type="button" aria-expanded="true" aria-controls="siteNav" data-nav-toggle>
+        <span>Menu</span>
+        <span class="nav-toggle-mark" aria-hidden="true"></span>
+      </button>
 
-    <a class="header-cta" href="mailto:markoderic04@gmail.com">
+      <nav class="nav-pill" id="siteNav" aria-label="Portfolio sections" data-nav-menu>
+        <div class="nav-item">
+          <button class="nav-trigger" type="button" aria-expanded="false" data-nav-trigger>Capabilities</button>
+          <div class="nav-panel">
+            <a href="#capabilities"><span>Overview</span><strong>What I build</strong></a>
+            <a href="#catalog"><span>Web Interfaces</span><strong>Catalog and product pages</strong></a>
+            <a href="#media"><span>Content Systems</span><strong>Video and channel work</strong></a>
+          </div>
+        </div>
+
+        <div class="nav-item">
+          <button class="nav-trigger" type="button" aria-expanded="false" data-nav-trigger>Projects</button>
+          <div class="nav-panel">
+            <a href="#work"><span>PulseBudget</span><strong>Finance dashboard</strong></a>
+            <a href="#catalog"><span>Streetwear Catalog</span><strong>Product storefront</strong></a>
+            <a href="#proof"><span>Process</span><strong>How the work is framed</strong></a>
+          </div>
+        </div>
+
+        <div class="nav-item">
+          <button class="nav-trigger" type="button" aria-expanded="false" data-nav-trigger>Media</button>
+          <div class="nav-panel">
+            <a href="#media"><span>Brand Film</span><strong>Personal intro video</strong></a>
+            <a href="#channel"><span>Animal Feed</span><strong>Short-form channel</strong></a>
+            <a href="#profile"><span>Profile</span><strong>Resume and background</strong></a>
+          </div>
+        </div>
+
+        <div class="nav-item">
+          <button class="nav-trigger" type="button" aria-expanded="false" data-nav-trigger>Contact</button>
+          <div class="nav-panel nav-panel-actions">
+            <button type="button" data-open-project><span>Start Project</span><strong>Open the brief form</strong></button>
+            <a href="mailto:markoderic04@gmail.com"><span>Email</span><strong>markoderic04@gmail.com</strong></a>
+            <a href="https://www.linkedin.com/in/markoderic/" target="_blank" rel="noopener"><span>LinkedIn</span><strong>Connect professionally</strong></a>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <button class="header-cta" type="button" data-open-project>
       <span>Start a project</span>
       <span class="cta-dots" aria-hidden="true"></span>
-    </a>
+    </button>
   </header>
 
   <main id="top">
-    <section class="hero" aria-labelledby="heroTitle">
+    <section class="hero" aria-labelledby="heroTitle" data-tilt-zone>
       <div class="hero-media" aria-hidden="true">
         <img class="hero-shot hero-shot-one" src="finance-tracker-screenshot.png" alt="" />
         <img class="hero-shot hero-shot-two" src="productcatalogscreenshot.jpeg" alt="" />
@@ -43,17 +96,35 @@
 
       <div class="hero-inner">
         <p class="eyebrow">Digital portfolio / web / content / strategy</p>
-        <h1 id="heroTitle">Marko Deric</h1>
+        <h1 class="hero-name" id="heroTitle" data-text="Marko Deric">
+          <span data-word="Marko">Marko</span>
+          <span data-word="Deric">Deric</span>
+        </h1>
         <p class="hero-statement">
           I build polished digital experiences across websites, dashboards, video, and social content, with a focus on clear presentation and useful interaction.
         </p>
 
         <div class="hero-actions" aria-label="Primary actions">
-          <a class="button button-light" href="#work">View work</a>
+          <a class="button button-light" href="#work">View featured project</a>
+          <button class="button button-ghost" type="button" data-open-project>Start a project</button>
           <button class="button button-ghost" type="button" data-open-resume>Resume</button>
         </div>
       </div>
 
+      <div class="hero-micro-grid" aria-label="Portfolio highlights">
+        <a href="#work">
+          <span>Featured Build</span>
+          <strong>PulseBudget</strong>
+        </a>
+        <a href="#media">
+          <span>Brand Film</span>
+          <strong>23 sec</strong>
+        </a>
+        <a href="#catalog">
+          <span>Web Catalog</span>
+          <strong>Retail UI</strong>
+        </a>
+      </div>
     </section>
 
     <section class="section section-light" id="capabilities" aria-labelledby="capabilitiesTitle">
@@ -63,7 +134,7 @@
       </div>
 
       <div class="service-grid">
-        <a class="service-card reveal" href="#work" aria-label="View web interface work">
+        <a class="service-card reveal" href="#catalog" aria-label="View web interface work">
           <img src="productcatalogscreenshot.jpeg" alt="" />
           <div class="service-overlay"></div>
           <div class="service-head">
@@ -111,23 +182,45 @@
           </div>
         </a>
 
-        <a class="service-card reveal" href="#profile" aria-label="View professional profile">
-          <img src="markodericresume2026.png" alt="" />
+        <button class="service-card reveal service-card-button" type="button" data-open-project aria-label="Open project inquiry form">
+          <div class="service-pattern" aria-hidden="true"></div>
           <div class="service-overlay"></div>
           <div class="service-head">
-            <h3>Professional Story</h3>
-            <span>/3 focus areas</span>
+            <h3>Project Direction</h3>
+            <span>/brief form</span>
           </div>
           <div class="service-tags" aria-hidden="true">
-            <span>Resume</span>
-            <span>Career Framing</span>
-            <span>Presentation</span>
+            <span>Web Project</span>
+            <span>Content Plan</span>
+            <span>Brand Polish</span>
           </div>
-        </a>
+        </button>
       </div>
     </section>
 
-    <section class="statement-band" aria-label="Portfolio approach">
+    <section class="feature-project" id="work" aria-labelledby="workTitle">
+      <div class="feature-project-copy reveal">
+        <p class="section-kicker">Featured project</p>
+        <h2 id="workTitle">PulseBudget turns finance tracking into a visual operating system.</h2>
+        <p>
+          A dashboard interface that organizes spending, bills, savings goals, debt, subscriptions, and cash flow into one polished experience.
+        </p>
+
+        <div class="project-facts" aria-label="PulseBudget project details">
+          <span>Dashboard UI</span>
+          <span>Personal finance</span>
+          <span>Interactive web</span>
+        </div>
+
+        <a class="button button-dark" href="https://markoderic.github.io/finance-tracker/" target="_blank" rel="noopener">View website</a>
+      </div>
+
+      <a class="feature-project-media reveal" href="https://markoderic.github.io/finance-tracker/" target="_blank" rel="noopener" aria-label="Open PulseBudget Finance Tracker">
+        <img src="finance-tracker-screenshot.png" alt="PulseBudget finance tracker interface" />
+      </a>
+    </section>
+
+    <section class="statement-band" id="proof" aria-label="Portfolio approach">
       <div class="statement-inner reveal">
         <p>Approach</p>
         <h2>Make the work easy to trust before asking anyone to click deeper.</h2>
@@ -135,109 +228,61 @@
           Each project is framed with a clear role, a visual proof point, and a direct path to the finished piece.
         </span>
       </div>
+
+      <div class="process-row reveal" aria-label="Project process">
+        <article>
+          <span>01</span>
+          <h3>Clarify</h3>
+          <p>Define the audience, purpose, and the impression the work needs to make.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>Shape</h3>
+          <p>Turn the goal into layout, visual direction, interaction, and content structure.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>Ship</h3>
+          <p>Refine the finish so the final page, video, or dashboard feels complete.</p>
+        </article>
+      </div>
     </section>
 
-    <section class="section section-light" id="work" aria-labelledby="workTitle">
-      <div class="section-heading split-heading reveal">
-        <div>
-          <p class="section-kicker">Latest work</p>
-          <h2 id="workTitle">Projects that show range without overexplaining.</h2>
-        </div>
+    <section class="project-split section-light" id="catalog" aria-labelledby="catalogTitle">
+      <a class="project-split-media reveal" href="https://ims322-sheffield-2026-spring.github.io/product-catalog-markoderic/" target="_blank" rel="noopener" aria-label="Open Streetwear Product Catalog">
+        <img src="productcatalogscreenshot.jpeg" alt="Streetwear product catalog website interface" />
+      </a>
+
+      <div class="project-split-copy reveal">
+        <p class="section-kicker">Web project</p>
+        <h2 id="catalogTitle">A clean catalog concept for product discovery.</h2>
         <p>
-          Selected projects across web builds, interface design, and media. Each piece is framed around what it needed to communicate and how the final experience supports that goal.
+          Streetwear Product Catalog is a storefront concept built with HTML, CSS, and JavaScript. The layout prioritizes browsing, pricing clarity, and a polished first impression.
+        </p>
+        <div class="project-facts">
+          <span>HTML</span>
+          <span>CSS</span>
+          <span>JavaScript</span>
+          <span>Retail UI</span>
+        </div>
+        <a class="text-link" href="https://ims322-sheffield-2026-spring.github.io/product-catalog-markoderic/" target="_blank" rel="noopener">View website</a>
+      </div>
+    </section>
+
+    <section class="media-section" id="media" aria-labelledby="mediaTitle">
+      <div class="media-copy reveal">
+        <p class="section-kicker">Brand film</p>
+        <h2 id="mediaTitle">A personal intro cut with rhythm and personality.</h2>
+        <p>
+          This short video introduces how I work, what I build, and the kind of creative digital projects I want to keep making.
         </p>
       </div>
 
-      <div class="work-list">
-        <article class="work-card work-card-featured reveal">
-          <a class="work-media" href="https://markoderic.github.io/finance-tracker/" target="_blank" rel="noopener" aria-label="Open PulseBudget Finance Tracker">
-            <img src="finance-tracker-screenshot.png" alt="PulseBudget finance tracker interface" />
-          </a>
-          <div class="work-copy">
-            <div class="work-meta">
-              <span>01</span>
-              <span>Dashboard Interface</span>
-            </div>
-            <h3>PulseBudget Finance Tracker</h3>
-            <p>
-              A personal finance dashboard designed to make spending, bills, savings, debt, subscriptions, and cash flow feel organized at a glance.
-            </p>
-            <div class="work-details">
-              <span>Dashboard UI</span>
-              <span>Personal finance</span>
-              <span>Interactive web</span>
-            </div>
-            <a class="text-link" href="https://markoderic.github.io/finance-tracker/" target="_blank" rel="noopener">View website</a>
-          </div>
-        </article>
-
-        <article class="work-card reveal">
-          <a class="work-media" href="https://ims322-sheffield-2026-spring.github.io/product-catalog-markoderic/" target="_blank" rel="noopener" aria-label="Open Streetwear Product Catalog">
-            <img src="productcatalogscreenshot.jpeg" alt="Streetwear product catalog website interface" />
-          </a>
-          <div class="work-copy">
-            <div class="work-meta">
-              <span>02</span>
-              <span>Product Website</span>
-            </div>
-            <h3>Streetwear Product Catalog</h3>
-            <p>
-              A clean storefront concept built with HTML, CSS, and JavaScript, focused on product browsing, pricing clarity, and an approachable catalog layout.
-            </p>
-            <div class="work-details">
-              <span>HTML</span>
-              <span>CSS</span>
-              <span>JavaScript</span>
-            </div>
-            <a class="text-link" href="https://ims322-sheffield-2026-spring.github.io/product-catalog-markoderic/" target="_blank" rel="noopener">View website</a>
-          </div>
-        </article>
-
-        <article class="work-card reveal" id="media">
-          <div class="work-media">
-            <video controls preload="metadata" playsinline>
-              <source src="personalbrandingvideo.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-          <div class="work-copy">
-            <div class="work-meta">
-              <span>03</span>
-              <span>Brand Film</span>
-            </div>
-            <h3>Personal Branding Video</h3>
-            <p>
-              A concise introduction video shaped around personality, creative direction, and the type of digital work I want to keep building.
-            </p>
-            <div class="work-details">
-              <span>Premiere Pro</span>
-              <span>CapCut</span>
-              <span>Storytelling</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="work-card reveal">
-          <a class="work-media media-crop" href="https://www.youtube.com/@animalfeedreal" target="_blank" rel="noopener" aria-label="Open Animal Feed YouTube channel">
-            <img src="animalfeedpfp.jpeg" alt="Animal Feed channel profile artwork" />
-          </a>
-          <div class="work-copy">
-            <div class="work-meta">
-              <span>04</span>
-              <span>Content Channel</span>
-            </div>
-            <h3>Animal Feed Short-form Channel</h3>
-            <p>
-              A social content experiment built around fast, entertaining clips, recognizable channel identity, and lightweight audience attention.
-            </p>
-            <div class="work-details">
-              <span>YouTube</span>
-              <span>Short-form content</span>
-              <span>Channel identity</span>
-            </div>
-            <a class="text-link" href="https://www.youtube.com/@animalfeedreal" target="_blank" rel="noopener">Visit channel</a>
-          </div>
-        </article>
+      <div class="media-frame reveal">
+        <video controls preload="metadata" playsinline>
+          <source src="personalbrandingvideo.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </div>
     </section>
 
@@ -264,6 +309,26 @@
       </button>
     </section>
 
+    <section class="channel-section" id="channel" aria-labelledby="channelTitle">
+      <a class="channel-avatar reveal" href="https://www.youtube.com/@animalfeedreal" target="_blank" rel="noopener" aria-label="Open Animal Feed YouTube channel">
+        <img src="animalfeedpfp.jpeg" alt="Animal Feed channel profile artwork" />
+      </a>
+
+      <div class="channel-copy reveal">
+        <p class="section-kicker">Content channel</p>
+        <h2 id="channelTitle">Animal Feed experiments with fast, repeatable attention.</h2>
+        <p>
+          A short-form YouTube channel focused on quick entertaining clips, recognizable identity, and lightweight content systems.
+        </p>
+        <div class="project-facts">
+          <span>YouTube</span>
+          <span>Short-form content</span>
+          <span>Channel identity</span>
+        </div>
+        <a class="text-link" href="https://www.youtube.com/@animalfeedreal" target="_blank" rel="noopener">Visit channel</a>
+      </div>
+    </section>
+
     <section class="contact-section" id="contact" aria-labelledby="contactTitle">
       <div class="contact-inner reveal">
         <p class="section-kicker">Contact</p>
@@ -273,6 +338,10 @@
         </p>
 
         <div class="contact-links">
+          <button type="button" data-open-project>
+            <span>Project brief</span>
+            <strong>Start a project</strong>
+          </button>
           <a href="mailto:markoderic04@gmail.com">
             <span>Email</span>
             <strong>markoderic04@gmail.com</strong>
@@ -281,27 +350,92 @@
             <span>LinkedIn</span>
             <strong>Connect</strong>
           </a>
-          <a href="https://www.youtube.com/@animalfeedreal" target="_blank" rel="noopener">
-            <span>YouTube</span>
-            <strong>Watch</strong>
-          </a>
         </div>
       </div>
     </section>
   </main>
 
-  <a class="floating-action" href="mailto:markoderic04@gmail.com" aria-label="Email Marko Deric">
+  <button class="floating-action" type="button" data-open-project aria-label="Open project form">
     <span>Start a project</span>
     <span class="cta-dots" aria-hidden="true"></span>
-  </a>
+  </button>
 
   <footer class="site-footer">
     <p>&copy; <span id="year"></span> Marko Deric</p>
     <p>Built with HTML, CSS, and JavaScript.</p>
   </footer>
 
-  <div class="resume-modal" id="resumeModal" aria-hidden="true">
-    <div class="resume-backdrop" data-close-resume></div>
+  <div class="modal project-modal" id="projectModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-project></div>
+
+    <section class="project-dialog" role="dialog" aria-modal="true" aria-labelledby="projectTitle">
+      <div class="modal-header">
+        <div>
+          <p class="resume-kicker">Start a project</p>
+          <h2 id="projectTitle">Tell me what you want to build.</h2>
+        </div>
+        <button class="resume-close" type="button" aria-label="Close project form" data-close-project>Close</button>
+      </div>
+
+      <form class="project-form" data-project-form>
+        <label>
+          <span>Name</span>
+          <input name="name" type="text" autocomplete="name" required />
+        </label>
+
+        <label>
+          <span>Email</span>
+          <input name="email" type="email" autocomplete="email" required />
+        </label>
+
+        <label>
+          <span>Project type</span>
+          <select name="type" required>
+            <option value="">Choose one</option>
+            <option>Website or landing page</option>
+            <option>Dashboard or app interface</option>
+            <option>Video or social content</option>
+            <option>Brand or portfolio polish</option>
+            <option>Something else</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Timeline</span>
+          <select name="timeline" required>
+            <option value="">Choose one</option>
+            <option>ASAP</option>
+            <option>2-4 weeks</option>
+            <option>1-2 months</option>
+            <option>Flexible</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Budget range</span>
+          <select name="budget">
+            <option value="">Choose one</option>
+            <option>Student/campus budget</option>
+            <option>Under $500</option>
+            <option>$500-$1,500</option>
+            <option>$1,500+</option>
+            <option>Not sure yet</option>
+          </select>
+        </label>
+
+        <label class="form-wide">
+          <span>Project details</span>
+          <textarea name="details" rows="5" placeholder="What are you trying to make, who is it for, and what does success look like?" required></textarea>
+        </label>
+
+        <button class="button button-dark form-wide" type="submit">Send project brief</button>
+        <p class="form-status form-wide" data-form-status></p>
+      </form>
+    </section>
+  </div>
+
+  <div class="modal resume-modal" id="resumeModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-resume></div>
 
     <section class="resume-dialog" role="dialog" aria-modal="true" aria-labelledby="resumeTitle">
       <div class="resume-modal-header">

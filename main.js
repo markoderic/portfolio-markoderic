@@ -6,6 +6,21 @@ if (year) {
   year.textContent = new Date().getFullYear();
 }
 
+const loader = document.querySelector(".page-loader");
+
+window.addEventListener("load", () => {
+  window.setTimeout(() => {
+    body.classList.add("site-ready");
+    body.classList.remove("is-loading");
+  }, prefersReducedMotion ? 0 : 900);
+
+  window.setTimeout(() => {
+    if (loader) {
+      loader.setAttribute("hidden", "");
+    }
+  }, prefersReducedMotion ? 0 : 1700);
+});
+
 const revealItems = document.querySelectorAll(".reveal");
 
 if ("IntersectionObserver" in window && !prefersReducedMotion) {
@@ -29,8 +44,80 @@ if ("IntersectionObserver" in window && !prefersReducedMotion) {
   revealItems.forEach((item) => item.classList.add("visible"));
 }
 
+const navRoot = document.querySelector("[data-nav-root]");
+const navToggle = document.querySelector("[data-nav-toggle]");
+const navTriggers = document.querySelectorAll("[data-nav-trigger]");
+const navLinks = document.querySelectorAll(".nav-panel a, .nav-panel button");
+const desktopNav = window.matchMedia("(min-width: 1101px)");
+
+function syncNavMode() {
+  if (!navRoot || !navToggle) return;
+
+  navRoot.classList.toggle("open", desktopNav.matches);
+  navToggle.setAttribute("aria-expanded", String(desktopNav.matches));
+}
+
+syncNavMode();
+desktopNav.addEventListener("change", syncNavMode);
+
+if (navToggle && navRoot) {
+  navToggle.addEventListener("click", () => {
+    const isOpen = navRoot.classList.toggle("open");
+    navToggle.setAttribute("aria-expanded", String(isOpen));
+  });
+}
+
+navTriggers.forEach((trigger) => {
+  trigger.addEventListener("click", () => {
+    const item = trigger.closest(".nav-item");
+    const wasActive = item && item.classList.contains("active");
+
+    document.querySelectorAll(".nav-item.active").forEach((activeItem) => {
+      activeItem.classList.remove("active");
+      const activeTrigger = activeItem.querySelector("[data-nav-trigger]");
+      if (activeTrigger) {
+        activeTrigger.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    if (item && !wasActive) {
+      item.classList.add("active");
+      trigger.setAttribute("aria-expanded", "true");
+    }
+  });
+});
+
+navLinks.forEach((link) => {
+  link.addEventListener("click", () => {
+    document.querySelectorAll(".nav-item.active").forEach((item) => {
+      item.classList.remove("active");
+      const trigger = item.querySelector("[data-nav-trigger]");
+      if (trigger) {
+        trigger.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    if (navRoot && navToggle && !desktopNav.matches) {
+      navRoot.classList.remove("open");
+      navToggle.setAttribute("aria-expanded", "false");
+    }
+  });
+});
+
+document.addEventListener("click", (event) => {
+  if (navRoot && !navRoot.contains(event.target)) {
+    document.querySelectorAll(".nav-item.active").forEach((item) => {
+      item.classList.remove("active");
+      const trigger = item.querySelector("[data-nav-trigger]");
+      if (trigger) {
+        trigger.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+});
+
 const floatingAction = document.querySelector(".floating-action");
-const floatingActionBlockers = document.querySelectorAll(".statement-band, .work-list, .profile-section, .contact-section, .site-footer");
+const floatingActionBlockers = document.querySelectorAll(".feature-project, .project-split, .media-section, .profile-section, .channel-section, .contact-section, .site-footer");
 
 function syncFloatingAction() {
   if (!floatingAction) return;
@@ -40,7 +127,7 @@ function syncFloatingAction() {
     const rect = section.getBoundingClientRect();
     return rect.top <= actionY && rect.bottom >= actionY;
   });
-  const shouldShow = window.scrollY > window.innerHeight * 0.55;
+  const shouldShow = window.scrollY > window.innerHeight * 0.6;
   floatingAction.classList.toggle("visible", shouldShow && !isBlocked);
 }
 
@@ -49,58 +136,94 @@ window.addEventListener("scroll", syncFloatingAction, { passive: true });
 window.addEventListener("resize", syncFloatingAction);
 
 const heroShots = document.querySelectorAll(".hero-shot");
-let pointerX = 0;
-let pointerY = 0;
-let heroTicking = false;
+let targetPointerX = 0;
+let targetPointerY = 0;
+let currentPointerX = 0;
+let currentPointerY = 0;
+let pointerTicking = false;
 
-function updateHeroMotion() {
+function updatePointerMotion() {
+  currentPointerX += (targetPointerX - currentPointerX) * 0.2;
+  currentPointerY += (targetPointerY - currentPointerY) * 0.2;
+
+  const rotateY = currentPointerX * 34;
+  const rotateX = currentPointerY * -21;
+  const depthX = 22 + currentPointerX * 36;
+  const depthY = 20 + currentPointerY * 28;
+  const shadowX = 28 + currentPointerX * -42;
+  const shadowY = 32 + currentPointerY * -32;
+  const rimX = -12 + currentPointerX * 22;
+  const rimY = -10 + currentPointerY * 16;
+
+  body.style.setProperty("--name-ry", `${rotateY.toFixed(2)}deg`);
+  body.style.setProperty("--name-rx", `${rotateX.toFixed(2)}deg`);
+  body.style.setProperty("--name-depth-x", `${depthX.toFixed(2)}px`);
+  body.style.setProperty("--name-depth-y", `${depthY.toFixed(2)}px`);
+  body.style.setProperty("--name-shadow-x", `${shadowX.toFixed(2)}px`);
+  body.style.setProperty("--name-shadow-y", `${shadowY.toFixed(2)}px`);
+  body.style.setProperty("--name-rim-x", `${rimX.toFixed(2)}px`);
+  body.style.setProperty("--name-rim-y", `${rimY.toFixed(2)}px`);
+  body.style.setProperty("--name-glow-x", `${(currentPointerX * 44).toFixed(2)}%`);
+  body.style.setProperty("--name-glow-y", `${(currentPointerY * 30).toFixed(2)}%`);
+  body.style.setProperty("--pointer-x", `${(currentPointerX * 22).toFixed(2)}px`);
+  body.style.setProperty("--pointer-y", `${(currentPointerY * 16).toFixed(2)}px`);
+
   heroShots.forEach((shot, index) => {
-    const depth = (index + 1) * 0.55;
-    shot.style.setProperty("--pointer-x", `${pointerX * depth}px`);
-    shot.style.setProperty("--pointer-y", `${pointerY * depth}px`);
-    shot.style.translate = `var(--pointer-x, 0px) var(--pointer-y, 0px)`;
+    const depth = (index + 1) * 10;
+    shot.style.setProperty("--shot-x", `${(-currentPointerX * depth).toFixed(2)}px`);
+    shot.style.setProperty("--shot-y", `${(-currentPointerY * depth).toFixed(2)}px`);
   });
 
-  heroTicking = false;
+  if (Math.abs(targetPointerX - currentPointerX) > 0.001 || Math.abs(targetPointerY - currentPointerY) > 0.001) {
+    requestAnimationFrame(updatePointerMotion);
+  } else {
+    pointerTicking = false;
+  }
 }
 
 if (!prefersReducedMotion && window.matchMedia("(pointer: fine)").matches) {
   window.addEventListener("pointermove", (event) => {
-    pointerX = ((event.clientX / window.innerWidth) - 0.5) * 14;
-    pointerY = ((event.clientY / window.innerHeight) - 0.5) * 10;
+    targetPointerX = (event.clientX / window.innerWidth) - 0.5;
+    targetPointerY = (event.clientY / window.innerHeight) - 0.5;
 
-    if (!heroTicking) {
-      requestAnimationFrame(updateHeroMotion);
-      heroTicking = true;
+    if (!pointerTicking) {
+      requestAnimationFrame(updatePointerMotion);
+      pointerTicking = true;
     }
   }, { passive: true });
 }
 
 const resumeModal = document.getElementById("resumeModal");
+const projectModal = document.getElementById("projectModal");
 const resumeOpenButtons = document.querySelectorAll("[data-open-resume]");
 const resumeCloseButtons = document.querySelectorAll("[data-close-resume]");
+const projectOpenButtons = document.querySelectorAll("[data-open-project]");
+const projectCloseButtons = document.querySelectorAll("[data-close-project]");
 let lastFocusedElement = null;
 
-function openResumeModal() {
-  if (!resumeModal) return;
+function openModal(modal) {
+  if (!modal) return;
 
   lastFocusedElement = document.activeElement;
-  resumeModal.classList.add("open");
-  resumeModal.setAttribute("aria-hidden", "false");
-  body.classList.add("resume-locked");
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+  body.classList.add("modal-locked");
 
-  const closeButton = resumeModal.querySelector("[data-close-resume]");
-  if (closeButton) {
-    closeButton.focus();
+  const focusTarget = modal.querySelector("input, select, textarea, button, a");
+  if (focusTarget) {
+    focusTarget.focus();
   }
 }
 
-function closeResumeModal() {
-  if (!resumeModal) return;
+function closeModal(modal) {
+  if (!modal) return;
 
-  resumeModal.classList.remove("open");
-  resumeModal.setAttribute("aria-hidden", "true");
-  body.classList.remove("resume-locked");
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
+
+  if (!document.querySelector(".modal.open")) {
+    body.classList.remove("modal-locked");
+  }
 
   if (lastFocusedElement && typeof lastFocusedElement.focus === "function") {
     lastFocusedElement.focus();
@@ -108,15 +231,64 @@ function closeResumeModal() {
 }
 
 resumeOpenButtons.forEach((button) => {
-  button.addEventListener("click", openResumeModal);
+  button.addEventListener("click", () => openModal(resumeModal));
 });
 
 resumeCloseButtons.forEach((button) => {
-  button.addEventListener("click", closeResumeModal);
+  button.addEventListener("click", () => closeModal(resumeModal));
+});
+
+projectOpenButtons.forEach((button) => {
+  button.addEventListener("click", () => openModal(projectModal));
+});
+
+projectCloseButtons.forEach((button) => {
+  button.addEventListener("click", () => closeModal(projectModal));
 });
 
 window.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && resumeModal && resumeModal.classList.contains("open")) {
-    closeResumeModal();
+  if (event.key === "Escape") {
+    closeModal(resumeModal);
+    closeModal(projectModal);
+
+    if (navRoot && navToggle && !desktopNav.matches) {
+      navRoot.classList.remove("open");
+      navToggle.setAttribute("aria-expanded", "false");
+    }
   }
 });
+
+const projectForm = document.querySelector("[data-project-form]");
+const formStatus = document.querySelector("[data-form-status]");
+
+if (projectForm) {
+  projectForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(projectForm);
+    const name = String(formData.get("name") || "").trim();
+    const email = String(formData.get("email") || "").trim();
+    const type = String(formData.get("type") || "").trim();
+    const timeline = String(formData.get("timeline") || "").trim();
+    const budget = String(formData.get("budget") || "").trim();
+    const details = String(formData.get("details") || "").trim();
+
+    const subject = encodeURIComponent(`Project inquiry from ${name || "portfolio visitor"}`);
+    const bodyText = [
+      `Name: ${name}`,
+      `Email: ${email}`,
+      `Project type: ${type}`,
+      `Timeline: ${timeline}`,
+      `Budget: ${budget || "Not specified"}`,
+      "",
+      "Project details:",
+      details
+    ].join("\n");
+
+    if (formStatus) {
+      formStatus.textContent = "Opening your email app with the project brief filled in.";
+    }
+
+    window.location.href = `mailto:markoderic04@gmail.com?subject=${subject}&body=${encodeURIComponent(bodyText)}`;
+  });
+}
