@@ -46,6 +46,7 @@ function syncFloatingAction() {
 
 syncFloatingAction();
 window.addEventListener("scroll", syncFloatingAction, { passive: true });
+window.addEventListener("resize", syncFloatingAction);
 
 const heroShots = document.querySelectorAll(".hero-shot");
 let pointerX = 0;
