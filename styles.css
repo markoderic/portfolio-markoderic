@@ -647,8 +647,8 @@ h3 {
     3px 3px 0 #969690,
     4px 4px 0 #777772,
     5px 5px 0 #64645f,
-    var(--name-shadow-x) var(--name-shadow-y) 68px rgba(201, 255, 82, 0.28),
-    var(--name-rim-x) var(--name-rim-y) 44px rgba(255, 255, 255, 0.13);
+    var(--name-shadow-x) var(--name-shadow-y) 56px rgba(201, 255, 82, 0.15),
+    var(--name-rim-x) var(--name-rim-y) 38px rgba(255, 255, 255, 0.1);
   will-change: transform, text-shadow;
 }
 
@@ -657,10 +657,10 @@ h3 {
   position: absolute;
   inset: 0;
   z-index: -1;
-  color: rgba(201, 255, 82, 0.24);
-  transform: translate3d(var(--name-depth-x), var(--name-depth-y), -74px);
-  filter: blur(1.15px);
-  opacity: 0.9;
+  color: rgba(201, 255, 82, 0.13);
+  transform: translate3d(var(--name-depth-x), var(--name-depth-y), -62px);
+  filter: blur(0.85px);
+  opacity: 0.58;
   pointer-events: none;
 }
 
@@ -671,11 +671,11 @@ h3 {
   z-index: 2;
   color: transparent;
   background:
-    radial-gradient(circle at calc(40% + var(--name-glow-x)) calc(28% + var(--name-glow-y)), rgba(255, 255, 255, 0.78), transparent 17%),
-    linear-gradient(110deg, transparent 0 25%, rgba(201, 255, 82, 0.22) 42%, rgba(255, 255, 255, 0.3) 50%, transparent 64%);
+    radial-gradient(circle at calc(40% + var(--name-glow-x)) calc(28% + var(--name-glow-y)), rgba(255, 255, 255, 0.55), transparent 16%),
+    linear-gradient(110deg, transparent 0 29%, rgba(201, 255, 82, 0.1) 43%, rgba(255, 255, 255, 0.2) 52%, transparent 66%);
   -webkit-background-clip: text;
   background-clip: text;
-  opacity: 0.38;
+  opacity: 0.26;
   mix-blend-mode: screen;
   pointer-events: none;
 }

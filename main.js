@@ -148,10 +148,10 @@ function updatePointerMotion() {
 
   const rotateY = currentPointerX * 34;
   const rotateX = currentPointerY * -21;
-  const depthX = 22 + currentPointerX * 36;
-  const depthY = 20 + currentPointerY * 28;
-  const shadowX = 28 + currentPointerX * -42;
-  const shadowY = 32 + currentPointerY * -32;
+  const depthX = 16 + currentPointerX * 26;
+  const depthY = 15 + currentPointerY * 20;
+  const shadowX = 20 + currentPointerX * -28;
+  const shadowY = 24 + currentPointerY * -24;
   const rimX = -12 + currentPointerX * 22;
   const rimY = -10 + currentPointerY * 16;
 
@@ -163,8 +163,8 @@ function updatePointerMotion() {
   body.style.setProperty("--name-shadow-y", `${shadowY.toFixed(2)}px`);
   body.style.setProperty("--name-rim-x", `${rimX.toFixed(2)}px`);
   body.style.setProperty("--name-rim-y", `${rimY.toFixed(2)}px`);
-  body.style.setProperty("--name-glow-x", `${(currentPointerX * 44).toFixed(2)}%`);
-  body.style.setProperty("--name-glow-y", `${(currentPointerY * 30).toFixed(2)}%`);
+  body.style.setProperty("--name-glow-x", `${(currentPointerX * 30).toFixed(2)}%`);
+  body.style.setProperty("--name-glow-y", `${(currentPointerY * 20).toFixed(2)}%`);
   body.style.setProperty("--pointer-x", `${(currentPointerX * 22).toFixed(2)}px`);
   body.style.setProperty("--pointer-y", `${(currentPointerY * 16).toFixed(2)}px`);
 
