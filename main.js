@@ -105,6 +105,13 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
 --------------------------------------------------------------------------- */
 const revealItems = document.querySelectorAll("[data-reveal]");
 
+// Stagger children within any [data-stagger] group for a cascading reveal.
+document.querySelectorAll("[data-stagger]").forEach((group) => {
+  group.querySelectorAll("[data-reveal]").forEach((el, i) => {
+    el.style.transitionDelay = `${Math.min(i * 90, 540)}ms`;
+  });
+});
+
 if ("IntersectionObserver" in window && !prefersReducedMotion) {
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -251,6 +258,7 @@ function syncHeader() {
 --------------------------------------------------------------------------- */
 const heroShots = document.querySelectorAll(".hero-shot");
 const parallaxEls = document.querySelectorAll("[data-parallax]");
+const imgParallaxEls = document.querySelectorAll("[data-img-parallax]");
 
 function applyParallax() {
   if (prefersReducedMotion) return;
@@ -258,6 +266,16 @@ function applyParallax() {
   parallaxEls.forEach((el) => {
     const speed = parseFloat(el.getAttribute("data-parallax")) || 0.1;
     el.style.setProperty("--scroll-y", `${(y * speed).toFixed(1)}px`);
+  });
+
+  // Cover-image parallax: image drifts as its frame moves through the viewport.
+  const vh = window.innerHeight;
+  imgParallaxEls.forEach((img) => {
+    const rect = img.getBoundingClientRect();
+    if (rect.bottom < -200 || rect.top > vh + 200) return;
+    const progress = (rect.top + rect.height / 2 - vh / 2) / vh; // ~ -1..1
+    const shift = Math.max(-6, Math.min(6, progress * -8));
+    img.style.transform = `translateY(${shift.toFixed(2)}%) scale(1.16)`;
   });
 }
 
@@ -354,15 +372,23 @@ const cursor = document.querySelector("[data-cursor]");
 const magneticEls = document.querySelectorAll("[data-magnetic]");
 
 if (cursor && finePointer && !prefersReducedMotion) {
-  let cx = window.innerWidth / 2;
-  let cy = window.innerHeight / 2;
-  let tx = cx;
-  let ty = cy;
+  // Hide the OS cursor so there's no double cursor.
+  document.documentElement.classList.add("has-cursor");
+
+  const dot = cursor.querySelector(".cursor-dot");
+  const ring = cursor.querySelector(".cursor-ring");
+
+  let tx = window.innerWidth / 2;
+  let ty = window.innerHeight / 2;
+  let rx = tx;
+  let ry = ty;
 
   window.addEventListener("pointermove", (event) => {
     tx = event.clientX;
     ty = event.clientY;
     cursor.classList.add("active");
+    // Dot tracks the pointer instantly — feels precise, no lag.
+    if (dot) dot.style.transform = `translate(${tx}px, ${ty}px) translate(-50%, -50%)`;
   }, { passive: true });
 
   window.addEventListener("pointerdown", () => cursor.classList.add("is-down"));
@@ -370,15 +396,16 @@ if (cursor && finePointer && !prefersReducedMotion) {
   document.addEventListener("mouseleave", () => cursor.classList.remove("active"));
 
   function renderCursor() {
-    cx += (tx - cx) * 0.2;
-    cy += (ty - cy) * 0.2;
-    cursor.style.transform = `translate(${cx}px, ${cy}px)`;
+    // Ring eases behind for a smooth, premium trail.
+    rx += (tx - rx) * 0.35;
+    ry += (ty - ry) * 0.35;
+    if (ring) ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
     requestAnimationFrame(renderCursor);
   }
   requestAnimationFrame(renderCursor);
 
   const hoverTargets = document.querySelectorAll(
-    "a, button, .service-card, [data-magnetic], .resume-preview, input, select, textarea"
+    "a, button, .service-card, [data-magnetic], .resume-preview"
   );
   hoverTargets.forEach((el) => {
     el.addEventListener("pointerenter", () => cursor.classList.add("is-hover"));
