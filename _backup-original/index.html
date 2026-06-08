@@ -8,35 +8,21 @@
   <meta name="description" content="Digital portfolio of Marko Deric, featuring web projects, dashboard UI, video work, content strategy, and creative technology." />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" sizes="any" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-
   <link rel="stylesheet" href="styles.css" />
   <script src="main.js" defer></script>
 </head>
 
 <body class="is-loading">
-  <!-- Custom cursor -->
-  <div class="cursor" aria-hidden="true" data-cursor>
-    <span class="cursor-dot"></span>
-    <span class="cursor-ring"></span>
-  </div>
-
-  <!-- Page loader -->
   <div class="page-loader" aria-hidden="true">
     <div class="loader-stage">
-      <p class="loader-tag">Entering portfolio</p>
+      <p>Entering portfolio</p>
       <div class="loader-name" data-text="Marko Deric">Marko Deric</div>
-      <div class="loader-meter">
-        <div class="loader-track"><span></span></div>
-        <span class="loader-count" data-loader-count>00</span>
-      </div>
+      <div class="loader-track"><span></span></div>
     </div>
   </div>
 
   <header class="site-header" aria-label="Primary navigation">
-    <a class="brand-link" href="#top" aria-label="Go to top" data-magnetic>
+    <a class="brand-link" href="#top" aria-label="Go to top">
       <span class="brand-cube" aria-hidden="true">
         <span class="cube-face cube-front">M</span>
         <span class="cube-face cube-back">D</span>
@@ -49,7 +35,7 @@
     </a>
 
     <div class="nav-shell open" data-nav-root>
-      <button class="nav-toggle" type="button" aria-expanded="true" aria-controls="siteNav" data-nav-toggle data-magnetic>
+      <button class="nav-toggle" type="button" aria-expanded="true" aria-controls="siteNav" data-nav-toggle>
         <span>Menu</span>
         <span class="nav-toggle-mark" aria-hidden="true"></span>
       </button>
@@ -93,86 +79,63 @@
       </nav>
     </div>
 
-    <button class="header-cta" type="button" data-open-project data-magnetic>
+    <button class="header-cta" type="button" data-open-project>
       <span>Start a project</span>
       <span class="cta-dots" aria-hidden="true"></span>
     </button>
   </header>
 
-  <main id="top" data-scroll-container>
+  <main id="top">
     <section class="hero" aria-labelledby="heroTitle" data-tilt-zone>
       <div class="hero-media" aria-hidden="true">
-        <img class="hero-shot hero-shot-one" data-parallax="0.12" src="finance-tracker-screenshot.png" alt="" />
-        <img class="hero-shot hero-shot-two" data-parallax="0.2" src="productcatalogscreenshot.jpeg" alt="" />
-        <video class="hero-shot hero-shot-three" data-parallax="0.28" autoplay muted loop playsinline preload="metadata">
+        <img class="hero-shot hero-shot-one" src="finance-tracker-screenshot.png" alt="" />
+        <img class="hero-shot hero-shot-two" src="productcatalogscreenshot.jpeg" alt="" />
+        <video class="hero-shot hero-shot-three" autoplay muted loop playsinline preload="metadata">
           <source src="personalbrandingvideo.mp4" type="video/mp4" />
         </video>
       </div>
 
       <div class="hero-inner">
-        <p class="eyebrow" data-reveal>Digital portfolio / web / content / strategy</p>
+        <p class="eyebrow">Digital portfolio / web / content / strategy</p>
         <h1 class="hero-name" id="heroTitle" data-text="Marko Deric">
-          <span data-word="Marko" data-reveal-line><i>Marko</i></span>
-          <span data-word="Deric" data-reveal-line><i>Deric</i></span>
+          <span data-word="Marko">Marko</span>
+          <span data-word="Deric">Deric</span>
         </h1>
-        <p class="hero-statement" data-reveal>
+        <p class="hero-statement">
           I build polished digital experiences across websites, dashboards, video, and social content, with a focus on clear presentation and useful interaction.
         </p>
 
-        <div class="hero-actions" aria-label="Primary actions" data-reveal>
-          <a class="button button-light" href="#work" data-magnetic>View featured project</a>
-          <button class="button button-ghost" type="button" data-open-project data-magnetic>Start a project</button>
-          <button class="button button-ghost" type="button" data-open-resume data-magnetic>Resume</button>
+        <div class="hero-actions" aria-label="Primary actions">
+          <a class="button button-light" href="#work">View featured project</a>
+          <button class="button button-ghost" type="button" data-open-project>Start a project</button>
+          <button class="button button-ghost" type="button" data-open-resume>Resume</button>
         </div>
       </div>
 
       <div class="hero-micro-grid" aria-label="Portfolio highlights">
-        <a href="#work" data-reveal>
+        <a href="#work">
           <span>Featured Build</span>
           <strong>PulseBudget</strong>
         </a>
-        <a href="#media" data-reveal>
+        <a href="#media">
           <span>Brand Film</span>
           <strong>23 sec</strong>
         </a>
-        <a href="#catalog" data-reveal>
+        <a href="#catalog">
           <span>Web Catalog</span>
           <strong>Retail UI</strong>
         </a>
       </div>
-
-      <div class="hero-scroll" aria-hidden="true">
-        <span>Scroll</span>
-        <span class="hero-scroll-line"></span>
-      </div>
     </section>
-
-    <!-- Marquee band -->
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee-track" data-marquee>
-        <span>Web Interfaces</span><span class="marquee-dot"></span>
-        <span>Dashboard UI</span><span class="marquee-dot"></span>
-        <span>Video Content</span><span class="marquee-dot"></span>
-        <span>Brand Systems</span><span class="marquee-dot"></span>
-        <span>Front-End Development</span><span class="marquee-dot"></span>
-        <span>Creative Direction</span><span class="marquee-dot"></span>
-        <span>Web Interfaces</span><span class="marquee-dot"></span>
-        <span>Dashboard UI</span><span class="marquee-dot"></span>
-        <span>Video Content</span><span class="marquee-dot"></span>
-        <span>Brand Systems</span><span class="marquee-dot"></span>
-        <span>Front-End Development</span><span class="marquee-dot"></span>
-        <span>Creative Direction</span><span class="marquee-dot"></span>
-      </div>
-    </div>
 
     <section class="section section-light" id="capabilities" aria-labelledby="capabilitiesTitle">
       <div class="section-heading">
-        <p class="section-kicker" data-reveal>Selected capabilities</p>
-        <h2 id="capabilitiesTitle" data-reveal>A focused range for websites, media, and digital presentation.</h2>
+        <p class="section-kicker">Selected capabilities</p>
+        <h2 id="capabilitiesTitle">A focused range for websites, media, and digital presentation.</h2>
       </div>
 
       <div class="service-grid">
-        <a class="service-card" href="#catalog" aria-label="View web interface work" data-reveal data-tilt-card>
+        <a class="service-card reveal" href="#catalog" aria-label="View web interface work">
           <img src="productcatalogscreenshot.jpeg" alt="" />
           <div class="service-overlay"></div>
           <div class="service-head">
@@ -187,7 +150,7 @@
           </div>
         </a>
 
-        <a class="service-card" href="#work" aria-label="View dashboard interface work" data-reveal data-tilt-card>
+        <a class="service-card reveal" href="#work" aria-label="View dashboard interface work">
           <img src="finance-tracker-screenshot.png" alt="" />
           <div class="service-overlay"></div>
           <div class="service-head">
@@ -203,7 +166,7 @@
           </div>
         </a>
 
-        <a class="service-card" href="#media" aria-label="View video and media work" data-reveal data-tilt-card>
+        <a class="service-card reveal" href="#media" aria-label="View video and media work">
           <video autoplay muted loop playsinline preload="metadata">
             <source src="personalbrandingvideo.mp4" type="video/mp4" />
           </video>
@@ -220,7 +183,7 @@
           </div>
         </a>
 
-        <button class="service-card service-card-button" type="button" data-open-project aria-label="Open project inquiry form" data-reveal data-tilt-card>
+        <button class="service-card reveal service-card-button" type="button" data-open-project aria-label="Open project inquiry form">
           <div class="service-pattern" aria-hidden="true"></div>
           <div class="service-overlay"></div>
           <div class="service-head">
@@ -237,7 +200,7 @@
     </section>
 
     <section class="feature-project" id="work" aria-labelledby="workTitle">
-      <div class="feature-project-copy" data-reveal>
+      <div class="feature-project-copy reveal">
         <p class="section-kicker">Featured project</p>
         <h2 id="workTitle">PulseBudget turns finance tracking into a visual operating system.</h2>
         <p>
@@ -250,19 +213,16 @@
           <span>Interactive web</span>
         </div>
 
-        <a class="button button-dark" href="https://markoderic.github.io/finance-tracker/" target="_blank" rel="noopener" data-magnetic>View website</a>
+        <a class="button button-dark" href="https://markoderic.github.io/finance-tracker/" target="_blank" rel="noopener">View website</a>
       </div>
 
-      <div class="feature-project-sticky">
-        <a class="feature-project-media" href="https://markoderic.github.io/finance-tracker/" target="_blank" rel="noopener" aria-label="Open PulseBudget Finance Tracker" data-reveal data-tilt-card>
-          <span class="media-index">01</span>
-          <img src="finance-tracker-screenshot.png" alt="PulseBudget finance tracker interface" />
-        </a>
-      </div>
+      <a class="feature-project-media reveal" href="https://markoderic.github.io/finance-tracker/" target="_blank" rel="noopener" aria-label="Open PulseBudget Finance Tracker">
+        <img src="finance-tracker-screenshot.png" alt="PulseBudget finance tracker interface" />
+      </a>
     </section>
 
     <section class="statement-band" id="proof" aria-label="Portfolio approach">
-      <div class="statement-inner" data-reveal>
+      <div class="statement-inner reveal">
         <p>Approach</p>
         <h2>Make the work easy to trust before asking anyone to click deeper.</h2>
         <span>
@@ -270,18 +230,18 @@
         </span>
       </div>
 
-      <div class="process-row" aria-label="Project process">
-        <article data-reveal>
+      <div class="process-row reveal" aria-label="Project process">
+        <article>
           <span>01</span>
           <h3>Clarify</h3>
           <p>Define the audience, purpose, and the impression the work needs to make.</p>
         </article>
-        <article data-reveal>
+        <article>
           <span>02</span>
           <h3>Shape</h3>
           <p>Turn the goal into layout, visual direction, interaction, and content structure.</p>
         </article>
-        <article data-reveal>
+        <article>
           <span>03</span>
           <h3>Ship</h3>
           <p>Refine the finish so the final page, video, or dashboard feels complete.</p>
@@ -290,14 +250,11 @@
     </section>
 
     <section class="project-split section-light" id="catalog" aria-labelledby="catalogTitle">
-      <div class="project-split-sticky">
-        <a class="project-split-media" href="https://ims322-sheffield-2026-spring.github.io/product-catalog-markoderic/" target="_blank" rel="noopener" aria-label="Open Streetwear Product Catalog" data-reveal data-tilt-card>
-          <span class="media-index">02</span>
-          <img src="productcatalogscreenshot.jpeg" alt="Streetwear product catalog website interface" />
-        </a>
-      </div>
+      <a class="project-split-media reveal" href="https://ims322-sheffield-2026-spring.github.io/product-catalog-markoderic/" target="_blank" rel="noopener" aria-label="Open Streetwear Product Catalog">
+        <img src="productcatalogscreenshot.jpeg" alt="Streetwear product catalog website interface" />
+      </a>
 
-      <div class="project-split-copy" data-reveal>
+      <div class="project-split-copy reveal">
         <p class="section-kicker">Web project</p>
         <h2 id="catalogTitle">A clean catalog concept for product discovery.</h2>
         <p>
@@ -309,12 +266,12 @@
           <span>JavaScript</span>
           <span>Retail UI</span>
         </div>
-        <a class="text-link" href="https://ims322-sheffield-2026-spring.github.io/product-catalog-markoderic/" target="_blank" rel="noopener" data-magnetic>View website</a>
+        <a class="text-link" href="https://ims322-sheffield-2026-spring.github.io/product-catalog-markoderic/" target="_blank" rel="noopener">View website</a>
       </div>
     </section>
 
     <section class="media-section" id="media" aria-labelledby="mediaTitle">
-      <div class="media-copy" data-reveal>
+      <div class="media-copy reveal">
         <p class="section-kicker">Brand film</p>
         <h2 id="mediaTitle">A personal intro cut with rhythm and personality.</h2>
         <p>
@@ -322,7 +279,7 @@
         </p>
       </div>
 
-      <div class="media-frame" data-reveal>
+      <div class="media-frame reveal">
         <video controls preload="metadata" playsinline>
           <source src="personalbrandingvideo.mp4" type="video/mp4" />
           Your browser does not support the video tag.
@@ -330,32 +287,8 @@
       </div>
     </section>
 
-    <!-- About me (reframed) -->
-    <section class="about-band" id="about" aria-labelledby="aboutTitle">
-      <div class="about-inner">
-        <p class="section-kicker" data-reveal>About</p>
-        <h2 id="aboutTitle" class="about-statement" data-reveal-words>
-          I care about work that feels considered. Clear layouts, honest motion, and details that hold up when you look twice.
-        </h2>
-        <div class="about-meta" data-reveal>
-          <div>
-            <span>Discipline</span>
-            <strong>Interactive media &amp; design</strong>
-          </div>
-          <div>
-            <span>Focus</span>
-            <strong>Front-end, creative direction, content</strong>
-          </div>
-          <div>
-            <span>Approach</span>
-            <strong>Clarify, shape, ship</strong>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section class="section profile-section" id="profile" aria-labelledby="profileTitle">
-      <div class="profile-copy" data-reveal>
+      <div class="profile-copy reveal">
         <p class="section-kicker">Profile</p>
         <h2 id="profileTitle">Built at the intersection of design, media, and business.</h2>
         <p>
@@ -369,20 +302,20 @@
           <span>Brand-minded presentation</span>
         </div>
 
-        <button class="button button-dark" type="button" data-open-resume data-magnetic>View resume</button>
+        <button class="button button-dark" type="button" data-open-resume>View resume</button>
       </div>
 
-      <button class="resume-preview" type="button" data-open-resume aria-label="Open resume preview" data-reveal>
+      <button class="resume-preview reveal" type="button" data-open-resume aria-label="Open resume preview">
         <img src="markodericresume2026.png" alt="Resume preview for Marko Deric" />
       </button>
     </section>
 
     <section class="channel-section" id="channel" aria-labelledby="channelTitle">
-      <a class="channel-avatar" href="https://www.youtube.com/@animalfeedreal" target="_blank" rel="noopener" aria-label="Open Animal Feed YouTube channel" data-reveal data-tilt-card>
+      <a class="channel-avatar reveal" href="https://www.youtube.com/@animalfeedreal" target="_blank" rel="noopener" aria-label="Open Animal Feed YouTube channel">
         <img src="animalfeedpfp.jpeg" alt="Animal Feed channel profile artwork" />
       </a>
 
-      <div class="channel-copy" data-reveal>
+      <div class="channel-copy reveal">
         <p class="section-kicker">Content channel</p>
         <h2 id="channelTitle">Animal Feed experiments with fast, repeatable attention.</h2>
         <p>
@@ -393,30 +326,28 @@
           <span>Short-form content</span>
           <span>Channel identity</span>
         </div>
-        <a class="text-link" href="https://www.youtube.com/@animalfeedreal" target="_blank" rel="noopener" data-magnetic>Visit channel</a>
+        <a class="text-link" href="https://www.youtube.com/@animalfeedreal" target="_blank" rel="noopener">Visit channel</a>
       </div>
     </section>
 
     <section class="contact-section" id="contact" aria-labelledby="contactTitle">
-      <div class="contact-inner">
-        <div class="contact-lead" data-reveal>
-          <p class="section-kicker">Contact</p>
-          <h2 id="contactTitle">Let's build the next version with purpose.</h2>
-          <p>
-            I am open to internships, creative opportunities, campus media work, social content projects, web projects, and collaborations that combine business, design, and technology.
-          </p>
-        </div>
+      <div class="contact-inner reveal">
+        <p class="section-kicker">Contact</p>
+        <h2 id="contactTitle">Let's build the next version with purpose.</h2>
+        <p>
+          I am open to internships, creative opportunities, campus media work, social content projects, web projects, and collaborations that combine business, design, and technology.
+        </p>
 
-        <div class="contact-links" data-reveal>
-          <button type="button" data-open-project data-magnetic>
+        <div class="contact-links">
+          <button type="button" data-open-project>
             <span>Project brief</span>
             <strong>Start a project</strong>
           </button>
-          <a href="mailto:markoderic04@gmail.com" data-magnetic>
+          <a href="mailto:markoderic04@gmail.com">
             <span>Email</span>
             <strong>markoderic04@gmail.com</strong>
           </a>
-          <a href="https://www.linkedin.com/in/markoderic/" target="_blank" rel="noopener" data-magnetic>
+          <a href="https://www.linkedin.com/in/markoderic/" target="_blank" rel="noopener">
             <span>LinkedIn</span>
             <strong>Connect</strong>
           </a>
@@ -425,7 +356,7 @@
     </section>
   </main>
 
-  <button class="floating-action" type="button" data-open-project aria-label="Open project form" data-magnetic>
+  <button class="floating-action" type="button" data-open-project aria-label="Open project form">
     <span>Start a project</span>
     <span class="cta-dots" aria-hidden="true"></span>
   </button>
