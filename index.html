@@ -16,9 +16,25 @@
   <script>
     (function () {
       try { if (sessionStorage.getItem("md-nav") === "1") document.documentElement.classList.add("is-entering"); } catch (e) {}
+      try {
+        var c = document.createElement("canvas");
+        var gl = c.getContext("webgl2") || c.getContext("webgl");
+        var big = window.matchMedia("(min-width: 760px)").matches;
+        var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (gl && big && !reduce) document.documentElement.classList.add("webgl");
+      } catch (e) {}
     })();
   </script>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
   <script src="main.js" defer></script>
+  <script type="module" src="three-loader.js"></script>
 </head>
 
 <body class="is-loading">
@@ -86,10 +102,13 @@
 
       <div class="hero-inner">
         <p class="eyebrow" data-reveal>Interactive media &amp; design / web / product / content</p>
-        <h1 class="hero-name" id="heroTitle" data-text="Marko Deric">
-          <span data-word="Marko" data-reveal-line><i>Marko</i></span>
-          <span data-word="Deric" data-reveal-line><i>Deric</i></span>
-        </h1>
+        <div class="hero-name-stage">
+          <h1 class="hero-name" id="heroTitle" data-text="Marko Deric" data-name-ref>
+            <span data-word="Marko" data-reveal-line><i>Marko</i></span>
+            <span data-word="Deric" data-reveal-line><i>Deric</i></span>
+          </h1>
+          <div class="metal-name" data-metal-name data-text="Marko|Deric" aria-hidden="true"></div>
+        </div>
         <p class="hero-statement" data-reveal>
           I design and build polished digital products — from a full mobile-first planner app to dashboards, websites, and video. Considered layouts, honest motion, details that hold up on a second look.
         </p>
@@ -164,8 +183,10 @@
 
         <div class="feature-project-sticky">
           <div class="showcase-stage" data-reveal>
-            <div class="device-phone" data-tilt-card>
+            <div class="iphone-viewer" data-iphone="overview" data-screenshot="planner-app-screenshot.png" aria-hidden="true"></div>
+            <div class="device-phone">
               <span class="device-glow" aria-hidden="true"></span>
+              <span class="device-buttons" aria-hidden="true"></span>
               <div class="device-screen">
                 <img src="planner-app-screenshot.png" alt="Personal Planner dashboard showing daily focus, money, school and bills cards" />
               </div>

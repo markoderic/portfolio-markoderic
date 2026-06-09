@@ -347,14 +347,16 @@ html.has-cursor select {
   position: relative;
   flex: 0 0 var(--cube-size);
   transform-style: preserve-3d;
-  transform: rotateX(calc(18deg + var(--name-rx) * 0.25)) rotateY(calc(-22deg + var(--name-ry) * 0.3));
-  transition: transform 180ms ease;
+  transform: rotateX(18deg) rotateY(-22deg);
   animation: cubeSpin 18s linear infinite;
 }
 
 @keyframes cubeSpin {
+  from {
+    transform: rotateX(18deg) rotateY(-22deg);
+  }
   to {
-    transform: rotateX(calc(18deg + var(--name-rx) * 0.25)) rotateY(calc(338deg + var(--name-ry) * 0.3));
+    transform: rotateX(18deg) rotateY(338deg);
   }
 }
 
@@ -639,7 +641,7 @@ html.has-cursor select {
 }
 
 .hero-inner {
-  width: min(1160px, 100%);
+  width: min(1340px, 100%);
   margin: 0 auto;
   position: relative;
   z-index: 1;
@@ -809,7 +811,7 @@ h3 {
 }
 
 .hero-micro-grid {
-  width: min(1160px, 100%);
+  width: min(1340px, 100%);
   margin: 38px auto 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -2281,12 +2283,15 @@ html.is-entering .page-transition .page-transition-mark {
 .page-title .line {
   display: block;
   overflow: hidden;
+  /* Extend the reveal mask below the baseline so g/y descenders aren't clipped */
+  padding-bottom: 0.2em;
+  margin-bottom: -0.14em;
 }
 
 .page-title .line i {
   font-style: normal;
   display: block;
-  transform: translateY(110%);
+  transform: translateY(125%);
   transition: transform 1100ms var(--ease-out);
 }
 
@@ -2333,43 +2338,51 @@ html.is-entering .page-transition .page-transition-mark {
 }
 
 /* =========================================================================
-   PHONE DEVICE MOCKUP
+   PHONE DEVICE MOCKUP — realistic iPhone Pro
    ========================================================================= */
 .device-phone {
   position: relative;
-  width: min(310px, 76vw);
-  aspect-ratio: 9 / 19.3;
-  padding: 11px;
-  border-radius: 46px;
-  background: linear-gradient(150deg, #232328, #08080b 56%, #161619);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  width: min(330px, 78vw);
+  aspect-ratio: 1040 / 2246;
+  padding: 12px;
+  border-radius: 56px;
+  /* brushed-titanium frame: bright vertical edges, dark face */
+  background:
+    linear-gradient(152deg, rgba(255, 255, 255, 0.55), transparent 26%),
+    linear-gradient(90deg, #54545c 0%, #1c1c22 9%, #0b0b0f 27%, #0b0b0f 73%, #1c1c22 91%, #54545c 100%);
   box-shadow:
-    0 50px 130px rgba(0, 0, 0, 0.6),
-    inset 0 0 0 2px rgba(255, 255, 255, 0.04),
-    inset 0 1px 1px rgba(255, 255, 255, 0.22);
+    0 0 0 1px rgba(0, 0, 0, 0.9),
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.4),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.7),
+    0 55px 90px -32px rgba(0, 0, 0, 0.72),
+    0 26px 55px -38px rgba(0, 0, 0, 0.9);
   isolation: isolate;
+  transform-style: preserve-3d;
 }
 
+/* Dynamic Island — sits in the empty top-center gap of the app */
 .device-phone::before {
   content: "";
   position: absolute;
-  top: 16px;
+  top: 27px;
   left: 50%;
   transform: translateX(-50%);
-  width: 92px;
+  width: 32%;
   height: 26px;
   border-radius: 999px;
-  background: #050507;
-  z-index: 3;
+  background: #040406;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  z-index: 5;
 }
 
 .device-screen {
   position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 36px;
+  border-radius: 45px;
   overflow: hidden;
   background: #050509;
+  box-shadow: 0 0 0 2px #050506, inset 0 0 24px rgba(0, 0, 0, 0.6);
 }
 
 .device-screen img {
@@ -2379,22 +2392,79 @@ html.is-entering .page-transition .page-transition-mark {
   object-position: top center;
 }
 
+/* glass reflection sweep */
 .device-screen::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(125deg, rgba(255, 255, 255, 0.16), transparent 32%);
+  background: linear-gradient(128deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.03) 24%, transparent 42%);
   mix-blend-mode: screen;
   pointer-events: none;
 }
 
+/* titanium side buttons */
+.device-buttons::before,
+.device-buttons::after {
+  content: "";
+  position: absolute;
+  width: 3px;
+  border-radius: 3px;
+  background: linear-gradient(#3a3a42, #0d0d11);
+  z-index: 2;
+}
+
+.device-buttons::before {
+  /* left edge: action button + volume up/down via stacked shadows */
+  left: -2.5px;
+  top: 26%;
+  height: 9%;
+  box-shadow:
+    0 30px 0 0 #2a2a30,
+    0 66px 0 0 #2a2a30;
+}
+
+.device-buttons::after {
+  /* right edge: power button */
+  right: -2.5px;
+  top: 31%;
+  height: 13%;
+}
+
 .device-glow {
   position: absolute;
-  inset: -16% -22%;
+  inset: -18% -26%;
   z-index: -1;
-  background: radial-gradient(circle at 50% 36%, rgba(255, 255, 255, 0.22), transparent 60%);
-  filter: blur(28px);
-  opacity: 0.7;
+  background: radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.2), transparent 62%);
+  filter: blur(34px);
+  opacity: 0.6;
+}
+
+/* 3D resting pose + gentle float for the overview featured phone */
+.feature-project-sticky .showcase-stage {
+  perspective: 1700px;
+}
+
+.feature-project-sticky .showcase-stage > .device-phone {
+  transform: rotateY(-19deg) rotateX(5deg) rotateZ(-1deg);
+  animation: phoneFloat 7s ease-in-out infinite;
+}
+
+@keyframes phoneFloat {
+  0%, 100% { transform: rotateY(-19deg) rotateX(5deg) rotateZ(-1deg) translateY(0); }
+  50% { transform: rotateY(-13deg) rotateX(3.5deg) rotateZ(-1deg) translateY(-12px); }
+}
+
+/* overview featured planner band — give it room to breathe vertically */
+.dark-wrap > .feature-project {
+  padding-block: 120px;
+  align-items: center;
+  min-height: min(88vh, 860px);
+}
+
+.dark-wrap > .feature-project .feature-project-sticky {
+  position: static;
+  display: grid;
+  place-items: center;
 }
 
 /* dark wrapper for featured bands on light pages */
@@ -2534,11 +2604,12 @@ html.is-entering .page-transition .page-transition-mark {
 }
 
 .showcase-phone {
+  /* rotateY sweeps +30deg -> -30deg across the scroll for a true 3D spin */
   transform:
-    rotateY(calc(20deg - var(--p) * 20deg))
-    rotateX(calc(7deg - var(--p) * 7deg))
-    rotateZ(calc(-3deg + var(--p) * 3deg))
-    scale(calc(0.84 + var(--p) * 0.18))
+    rotateY(calc(30deg - var(--p) * 60deg))
+    rotateX(calc(9deg - var(--p) * 12deg))
+    rotateZ(calc(-2deg + var(--p) * 4deg))
+    scale(calc(0.82 + var(--p) * 0.2))
     translateY(calc(var(--p) * -1.5vh));
   transform-style: preserve-3d;
   will-change: transform;
@@ -2858,6 +2929,12 @@ html.is-entering .page-transition .page-transition-mark {
     transform: none;
   }
 
+  /* Overview featured phone: gentle tilt on small screens so it never clips */
+  .feature-project-sticky .showcase-stage > .device-phone {
+    transform: rotateY(-9deg) rotateX(3deg);
+    animation: none;
+  }
+
   .stat-grid,
   .skill-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -2912,4 +2989,75 @@ html.is-entering .page-transition .page-transition-mark {
   .device-phone {
     width: min(260px, 70vw);
   }
+}
+
+/* =========================================================================
+   WEBGL: 3D metallic name + real iPhone model
+   ========================================================================= */
+.hero-name-stage {
+  position: relative;
+  width: fit-content;
+}
+
+.metal-name {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 700ms ease;
+  z-index: 2;
+}
+
+.metal-name canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.metal-name.is-ready {
+  opacity: 1;
+}
+
+/* Once the metal name is live, drop the flat HTML name's ink + 3D shadows
+   but keep its box so the canvas stays correctly sized. */
+.hero-name-stage:has(.metal-name.is-ready) .hero-name span,
+.hero-name-stage:has(.metal-name.is-ready) .hero-name span i {
+  color: transparent !important;
+  text-shadow: none !important;
+}
+
+.hero-name-stage:has(.metal-name.is-ready) .hero-name span::after {
+  opacity: 0 !important;
+}
+
+/* iPhone WebGL viewer (replaces the CSS phone on capable devices) */
+.iphone-viewer {
+  display: none;
+  position: relative;
+  width: min(380px, 82vw);
+  aspect-ratio: 0.62;
+  z-index: 1;
+}
+
+.iphone-viewer canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+html.webgl .iphone-viewer {
+  display: block;
+}
+
+/* Hide the CSS-phone fallbacks when the real model is in play */
+html.webgl .feature-project-sticky .showcase-stage > .device-phone,
+html.webgl .showcase-stage > .showcase-phone {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  /* Mobile keeps the CSS phone + flat name; never show empty WebGL boxes. */
+  .iphone-viewer { display: none !important; }
+  .metal-name { display: none !important; }
 }

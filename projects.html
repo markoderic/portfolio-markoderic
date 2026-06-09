@@ -16,9 +16,25 @@
   <script>
     (function () {
       try { if (sessionStorage.getItem("md-nav") === "1") document.documentElement.classList.add("is-entering"); } catch (e) {}
+      try {
+        var c = document.createElement("canvas");
+        var gl = c.getContext("webgl2") || c.getContext("webgl");
+        var big = window.matchMedia("(min-width: 760px)").matches;
+        var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (gl && big && !reduce) document.documentElement.classList.add("webgl");
+      } catch (e) {}
     })();
   </script>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
   <script src="main.js" defer></script>
+  <script type="module" src="three-loader.js"></script>
 </head>
 
 <body class="is-loading">
@@ -135,9 +151,11 @@
           </div>
 
           <div class="showcase-stage">
+            <div class="iphone-viewer" data-iphone="scroll" data-screenshot="planner-app-screenshot.png" aria-hidden="true"></div>
             <div class="showcase-phone">
               <div class="device-phone">
                 <span class="device-glow" aria-hidden="true"></span>
+                <span class="device-buttons" aria-hidden="true"></span>
                 <div class="device-screen">
                   <img src="planner-app-screenshot.png" alt="Personal Planner dashboard with daily focus, money, school and bills cards" />
                 </div>

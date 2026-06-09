@@ -315,18 +315,31 @@ document.addEventListener("click", (event) => {
 --------------------------------------------------------------------------- */
 const siteHeader = document.querySelector(".site-header");
 let lastScroll = 0;
+let headerHidden = false;
+
+function setHeaderHidden(hidden) {
+  if (hidden === headerHidden || !siteHeader) return;
+  headerHidden = hidden;
+  siteHeader.classList.toggle("is-hidden", hidden);
+}
 
 function syncHeader() {
   if (!siteHeader) return;
-  const y = window.scrollY;
+  const y = Math.max(0, window.scrollY);
+  const delta = y - lastScroll;
   const navOpen = navRoot && navRoot.classList.contains("open") && !desktopNav.matches;
-  if (y > 240 && y > lastScroll && !navOpen) {
-    siteHeader.classList.add("is-hidden");
-  } else {
-    siteHeader.classList.remove("is-hidden");
+
+  siteHeader.classList.toggle("is-scrolled", y > 30);
+
+  // Hysteresis: ignore sub-8px jitter so smooth scrolling never flickers the header.
+  if (navOpen || y < 320) {
+    setHeaderHidden(false);
+  } else if (delta > 8) {
+    setHeaderHidden(true);
+  } else if (delta < -8) {
+    setHeaderHidden(false);
   }
-  if (y > 30) siteHeader.classList.add("is-scrolled");
-  else siteHeader.classList.remove("is-scrolled");
+
   lastScroll = y;
 }
 
