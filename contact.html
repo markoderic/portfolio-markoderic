@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Contact | Marko Deric</title>
+  <meta name="description" content="Start a project with Marko Deric. Tell me what you want to build and I'll come back with a clear, considered plan." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" sizes="any" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    (function () {
+      try { if (sessionStorage.getItem("md-nav") === "1") document.documentElement.classList.add("is-entering"); } catch (e) {}
+    })();
+  </script>
+  <script src="main.js" defer></script>
+</head>
+
+<body class="is-loading">
+  <div class="cursor" aria-hidden="true" data-cursor>
+    <span class="cursor-dot"></span>
+    <span class="cursor-ring"></span>
+  </div>
+
+  <div class="page-transition" data-transition aria-hidden="true">
+    <span class="page-transition-mark">Contact<span></span></span>
+  </div>
+
+  <header class="site-header" aria-label="Primary navigation">
+    <a class="brand-link" href="index.html" aria-label="Go to top" data-link data-magnetic>
+      <span class="brand-cube" aria-hidden="true">
+        <span class="cube-face cube-front">M</span>
+        <span class="cube-face cube-back">D</span>
+        <span class="cube-face cube-right"></span>
+        <span class="cube-face cube-left"></span>
+        <span class="cube-face cube-top"></span>
+        <span class="cube-face cube-bottom"></span>
+      </span>
+      <span class="brand-text">Marko Deric</span>
+    </a>
+
+    <div class="nav-shell open" data-nav-root>
+      <button class="nav-toggle" type="button" aria-expanded="true" aria-controls="siteNav" data-nav-toggle data-magnetic>
+        <span>Menu</span>
+        <span class="nav-toggle-mark" aria-hidden="true"></span>
+      </button>
+      <nav class="nav-pill" id="siteNav" aria-label="Portfolio sections" data-nav-menu>
+        <a class="nav-link" href="index.html" data-link>Overview</a>
+        <a class="nav-link" href="projects.html" data-link>Projects</a>
+        <a class="nav-link" href="about.html" data-link>About</a>
+        <a class="nav-link is-current" href="contact.html" data-link>Contact</a>
+      </nav>
+    </div>
+
+    <a class="header-cta" href="mailto:markoderic04@gmail.com" data-magnetic>
+      <span>Email me</span>
+      <span class="cta-dots" aria-hidden="true"></span>
+    </a>
+  </header>
+
+  <main id="top">
+    <section class="page-hero" style="min-height: 58svh;" aria-labelledby="contactHeroTitle">
+      <div class="page-hero-grid" aria-hidden="true"></div>
+      <div class="page-hero-inner">
+        <p class="eyebrow" data-reveal>Contact / Start a project</p>
+        <h1 class="page-title" id="contactHeroTitle">
+          <span class="line"><i>Let's build</i></span>
+          <span class="line"><i>something.</i></span>
+        </h1>
+        <p class="page-lead" data-reveal>
+          Internships, product and web work, dashboards, social content, brand polish — if it lives at the meeting of design and technology, I want to hear about it.
+        </p>
+      </div>
+    </section>
+
+    <section class="contact-page" aria-labelledby="contactFormTitle">
+      <div class="contact-page-lead" data-reveal>
+        <p class="section-kicker">Get in touch</p>
+        <h2 id="contactFormTitle">Tell me what you want to make.</h2>
+        <p>Fill out the brief and I'll reply with a clear, considered plan — usually within a day or two. Prefer to skip the form? Reach me directly below.</p>
+
+        <div class="contact-direct">
+          <a href="mailto:markoderic04@gmail.com" data-magnetic>
+            <span>Email</span><strong>markoderic04@gmail.com</strong>
+          </a>
+          <a href="https://www.linkedin.com/in/markoderic/" target="_blank" rel="noopener" data-magnetic>
+            <span>LinkedIn</span><strong>in/markoderic</strong>
+          </a>
+          <a href="https://www.youtube.com/@animalfeedreal" target="_blank" rel="noopener" data-magnetic>
+            <span>YouTube</span><strong>@animalfeedreal</strong>
+          </a>
+        </div>
+      </div>
+
+      <div class="contact-form-panel" data-reveal>
+        <div class="contact-form-title">
+          <h3>Project brief</h3>
+          <p>A few quick questions so I can come back with something useful.</p>
+        </div>
+        <form class="project-form" action="https://formspree.io/f/xpqnqaaa" method="POST" data-project-form>
+          <input type="hidden" name="_subject" value="New portfolio project inquiry" />
+          <label><span>Name</span><input name="name" type="text" autocomplete="name" required /></label>
+          <label><span>Email</span><input name="email" type="email" autocomplete="email" required /></label>
+          <label>
+            <span>Project type</span>
+            <select name="type" required>
+              <option value="">Choose one</option>
+              <option>Website or landing page</option>
+              <option>Web app or dashboard</option>
+              <option>Video or social content</option>
+              <option>Brand or portfolio polish</option>
+              <option>Something else</option>
+            </select>
+          </label>
+          <label>
+            <span>Timeline</span>
+            <select name="timeline" required>
+              <option value="">Choose one</option>
+              <option>ASAP</option>
+              <option>2-4 weeks</option>
+              <option>1-2 months</option>
+              <option>Flexible</option>
+            </select>
+          </label>
+          <label>
+            <span>Budget range</span>
+            <select name="budget">
+              <option value="">Choose one</option>
+              <option>Student/campus budget</option>
+              <option>Under $500</option>
+              <option>$500-$1,500</option>
+              <option>$1,500+</option>
+              <option>Not sure yet</option>
+            </select>
+          </label>
+          <label class="form-wide">
+            <span>Project details</span>
+            <textarea name="details" rows="5" placeholder="What are you trying to make, who is it for, and what does success look like?" required></textarea>
+          </label>
+          <button class="button button-dark form-wide" type="submit" data-submit-button>Send project brief</button>
+          <p class="form-status form-wide" role="status" aria-live="polite" data-form-status></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; <span id="year"></span> Marko Deric</p>
+    <p>Built with HTML, CSS, and JavaScript.</p>
+  </footer>
+</body>
+</html>

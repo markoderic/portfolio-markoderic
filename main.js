@@ -1,4 +1,5 @@
 const body = document.body;
+const root = document.documentElement;
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
@@ -8,20 +9,30 @@ if (year) {
 }
 
 /* ---------------------------------------------------------------------------
-   Page loader with count-up
+   Page transition + first-load loader
+   - First external visit shows the count-up loader (index only).
+   - In-site navigation plays a smooth cover/reveal overlay.
 --------------------------------------------------------------------------- */
 const loader = document.querySelector(".page-loader");
 const loaderBar = document.querySelector(".loader-track span");
 const loaderCount = document.querySelector("[data-loader-count]");
+const transition = document.querySelector("[data-transition]");
+
+let navFlag = false;
+try { navFlag = sessionStorage.getItem("md-nav") === "1"; } catch (e) { navFlag = false; }
+
+function revealReady() {
+  body.classList.add("site-ready");
+  body.classList.remove("is-loading");
+}
 
 function runLoader(done) {
-  if (prefersReducedMotion) {
+  if (prefersReducedMotion || !loader) {
     if (loaderBar) loaderBar.style.transform = "scaleX(1)";
     if (loaderCount) loaderCount.textContent = "100";
     done();
     return;
   }
-
   let progress = 0;
   const tick = () => {
     progress += Math.random() * 9 + 4;
@@ -37,12 +48,74 @@ function runLoader(done) {
   setTimeout(tick, 120);
 }
 
+function clearEntering() {
+  // Reveal the page from under the transition overlay.
+  root.classList.remove("is-entering");
+  try { sessionStorage.removeItem("md-nav"); } catch (e) {}
+  window.setTimeout(() => {
+    if (transition) transition.classList.remove("is-cover");
+  }, 30);
+}
+
 window.addEventListener("load", () => {
-  runLoader(() => {
-    body.classList.add("site-ready");
-    body.classList.remove("is-loading");
-    window.setTimeout(() => loader && loader.setAttribute("hidden", ""), 900);
+  if (navFlag || root.classList.contains("is-entering")) {
+    // Arrived via an in-site link: skip the loader, reveal from overlay.
+    if (loader) loader.setAttribute("hidden", "");
+    revealReady();
+    clearEntering();
+  } else {
+    runLoader(() => {
+      revealReady();
+      window.setTimeout(() => loader && loader.setAttribute("hidden", ""), 900);
+    });
+  }
+});
+
+// Intercept same-page internal links for a smooth animated transition.
+function isInternalPageLink(link) {
+  const href = link.getAttribute("href") || "";
+  if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) return false;
+  if (link.target === "_blank" || link.hasAttribute("download")) return false;
+  if (/^https?:\/\//i.test(href) && link.hostname !== window.location.hostname) return false;
+  // Same-document hash links are handled by the smooth-scroll logic, not here.
+  if (/^[^/]*#/.test(href) && !/\.html/i.test(href)) return false;
+  return /\.html(\?|#|$)/i.test(href) || href === "/" || href.endsWith("/");
+}
+
+if (transition && !prefersReducedMotion) {
+  document.querySelectorAll('a[data-link]').forEach((link) => {
+    link.addEventListener("click", (event) => {
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+      if (!isInternalPageLink(link)) return;
+      const dest = link.getAttribute("href");
+      const destPath = dest.split("#")[0].split("?")[0];
+      const destHash = dest.includes("#") ? "#" + dest.split("#")[1] : "";
+      const current = window.location.pathname.split("/").pop() || "index.html";
+      // Same page: smooth-scroll to the anchor (or top) instead of reloading.
+      if (destPath === current || destPath === "" || (current === "index.html" && destPath === "index.html")) {
+        event.preventDefault();
+        if (destHash && document.querySelector(destHash)) {
+          scrollToTarget(destHash);
+        } else {
+          scrollToTarget(document.body);
+        }
+        return;
+      }
+      event.preventDefault();
+      try { sessionStorage.setItem("md-nav", "1"); } catch (e) {}
+      transition.classList.add("is-cover", "is-leaving");
+      window.setTimeout(() => { window.location.href = dest; }, 520);
+    });
   });
+}
+
+// Restore from bfcache without a stuck overlay.
+window.addEventListener("pageshow", (event) => {
+  if (event.persisted) {
+    root.classList.remove("is-entering");
+    if (transition) transition.classList.remove("is-cover", "is-leaving");
+    try { sessionStorage.removeItem("md-nav"); } catch (e) {}
+  }
 });
 
 /* ---------------------------------------------------------------------------
@@ -58,13 +131,11 @@ function initLenis() {
     smoothWheel: true,
     smoothTouch: false,
   });
-
   function raf(time) {
     lenis.raf(time);
     requestAnimationFrame(raf);
   }
   requestAnimationFrame(raf);
-
   lenis.on("scroll", onScroll);
 }
 
@@ -78,7 +149,6 @@ function scrollToTarget(target) {
   }
 }
 
-// Intercept in-page anchor links so they use the smooth scroller.
 document.querySelectorAll('a[href^="#"]').forEach((link) => {
   link.addEventListener("click", (event) => {
     const id = link.getAttribute("href");
@@ -90,7 +160,6 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
   });
 });
 
-// Load Lenis from CDN; if it fails the site still scrolls natively.
 (function loadLenis() {
   if (prefersReducedMotion) return;
   const script = document.createElement("script");
@@ -105,10 +174,9 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
 --------------------------------------------------------------------------- */
 const revealItems = document.querySelectorAll("[data-reveal]");
 
-// Stagger children within any [data-stagger] group for a cascading reveal.
 document.querySelectorAll("[data-stagger]").forEach((group) => {
   group.querySelectorAll("[data-reveal]").forEach((el, i) => {
-    el.style.transitionDelay = `${Math.min(i * 90, 540)}ms`;
+    el.style.transitionDelay = `${Math.min(i * 90, 600)}ms`;
   });
 });
 
@@ -121,91 +189,113 @@ if ("IntersectionObserver" in window && !prefersReducedMotion) {
       }
     });
   }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
-
   revealItems.forEach((item) => revealObserver.observe(item));
 } else {
   revealItems.forEach((item) => item.classList.add("visible"));
 }
 
 /* ---------------------------------------------------------------------------
-   About statement — word-by-word lighting
+   Word-by-word lighting for big statements
 --------------------------------------------------------------------------- */
-const aboutStatement = document.querySelector("[data-reveal-words]");
-if (aboutStatement && !prefersReducedMotion) {
-  const words = aboutStatement.textContent.trim().split(/\s+/);
-  aboutStatement.textContent = "";
+document.querySelectorAll("[data-reveal-words]").forEach((statement) => {
+  if (prefersReducedMotion) { statement.classList.add("lit"); return; }
+  const words = statement.textContent.trim().split(/\s+/);
+  statement.textContent = "";
   words.forEach((word, index) => {
     const span = document.createElement("span");
     span.className = "word";
     span.textContent = word;
-    span.style.transitionDelay = `${index * 28}ms`;
-    aboutStatement.appendChild(span);
-    aboutStatement.appendChild(document.createTextNode(" "));
+    span.style.transitionDelay = `${index * 26}ms`;
+    statement.appendChild(span);
+    statement.appendChild(document.createTextNode(" "));
   });
-
   if ("IntersectionObserver" in window) {
     const wordObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          aboutStatement.classList.add("lit");
+          statement.classList.add("lit");
           wordObserver.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.4 });
-    wordObserver.observe(aboutStatement);
+    }, { threshold: 0.35 });
+    wordObserver.observe(statement);
   } else {
-    aboutStatement.classList.add("lit");
+    statement.classList.add("lit");
   }
+});
+
+/* ---------------------------------------------------------------------------
+   Count-up stats
+--------------------------------------------------------------------------- */
+function animateCount(el) {
+  const target = parseFloat(el.getAttribute("data-count"));
+  if (isNaN(target)) return;
+  const decimals = (el.getAttribute("data-count").split(".")[1] || "").length;
+  const prefix = el.getAttribute("data-count-prefix") || "";
+  const suffix = el.getAttribute("data-count-suffix") || "";
+  if (prefersReducedMotion) {
+    el.textContent = prefix + target.toFixed(decimals) + suffix;
+    return;
+  }
+  const duration = 1500;
+  const start = performance.now();
+  function frame(now) {
+    const p = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - p, 3);
+    const value = target * eased;
+    el.textContent = prefix + value.toFixed(decimals) + suffix;
+    if (p < 1) requestAnimationFrame(frame);
+    else el.textContent = prefix + target.toFixed(decimals) + suffix;
+  }
+  requestAnimationFrame(frame);
+}
+
+const countEls = document.querySelectorAll("[data-count]");
+if (countEls.length && "IntersectionObserver" in window) {
+  const countObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        animateCount(entry.target);
+        countObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.6 });
+  countEls.forEach((el) => countObserver.observe(el));
+} else {
+  countEls.forEach((el) => animateCount(el));
 }
 
 /* ---------------------------------------------------------------------------
-   Navigation
+   Navigation (page-based)
 --------------------------------------------------------------------------- */
 const navRoot = document.querySelector("[data-nav-root]");
 const navToggle = document.querySelector("[data-nav-toggle]");
-const navTriggers = document.querySelectorAll("[data-nav-trigger]");
-const navLinks = document.querySelectorAll(".nav-panel a, .nav-panel button");
-const desktopNav = window.matchMedia("(min-width: 1101px)");
+const navLinks = document.querySelectorAll(".nav-pill a");
+const desktopNav = window.matchMedia("(min-width: 1001px)");
 
 function syncNavMode() {
   if (!navRoot || !navToggle) return;
-  navRoot.classList.toggle("open", desktopNav.matches);
-  navToggle.setAttribute("aria-expanded", String(desktopNav.matches));
+  if (desktopNav.matches) {
+    navRoot.classList.add("open");
+    navToggle.setAttribute("aria-expanded", "true");
+  } else {
+    navRoot.classList.remove("open");
+    navToggle.setAttribute("aria-expanded", "false");
+  }
 }
-
 syncNavMode();
 desktopNav.addEventListener("change", syncNavMode);
 
 if (navToggle && navRoot) {
   navToggle.addEventListener("click", () => {
+    if (desktopNav.matches) return;
     const isOpen = navRoot.classList.toggle("open");
     navToggle.setAttribute("aria-expanded", String(isOpen));
   });
 }
 
-function closeAllNavItems() {
-  document.querySelectorAll(".nav-item.active").forEach((item) => {
-    item.classList.remove("active");
-    const trigger = item.querySelector("[data-nav-trigger]");
-    if (trigger) trigger.setAttribute("aria-expanded", "false");
-  });
-}
-
-navTriggers.forEach((trigger) => {
-  trigger.addEventListener("click", () => {
-    const item = trigger.closest(".nav-item");
-    const wasActive = item && item.classList.contains("active");
-    closeAllNavItems();
-    if (item && !wasActive) {
-      item.classList.add("active");
-      trigger.setAttribute("aria-expanded", "true");
-    }
-  });
-});
-
 navLinks.forEach((link) => {
   link.addEventListener("click", () => {
-    closeAllNavItems();
     if (navRoot && navToggle && !desktopNav.matches) {
       navRoot.classList.remove("open");
       navToggle.setAttribute("aria-expanded", "false");
@@ -214,32 +304,17 @@ navLinks.forEach((link) => {
 });
 
 document.addEventListener("click", (event) => {
-  if (navRoot && !navRoot.contains(event.target)) {
-    closeAllNavItems();
+  if (navRoot && navToggle && !desktopNav.matches && !navRoot.contains(event.target)) {
+    navRoot.classList.remove("open");
+    navToggle.setAttribute("aria-expanded", "false");
   }
 });
 
 /* ---------------------------------------------------------------------------
-   Header auto-hide + floating action
+   Header auto-hide
 --------------------------------------------------------------------------- */
 const siteHeader = document.querySelector(".site-header");
-const floatingAction = document.querySelector(".floating-action");
-const floatingActionBlockers = document.querySelectorAll(
-  ".feature-project, .project-split, .media-section, .about-band, .profile-section, .channel-section, .contact-section, .site-footer"
-);
-
 let lastScroll = 0;
-
-function syncFloatingAction() {
-  if (!floatingAction) return;
-  const actionY = window.innerHeight - 72;
-  const isBlocked = Array.from(floatingActionBlockers).some((section) => {
-    const rect = section.getBoundingClientRect();
-    return rect.top <= actionY && rect.bottom >= actionY;
-  });
-  const shouldShow = window.scrollY > window.innerHeight * 0.6;
-  floatingAction.classList.toggle("visible", shouldShow && !isBlocked);
-}
 
 function syncHeader() {
   if (!siteHeader) return;
@@ -250,15 +325,18 @@ function syncHeader() {
   } else {
     siteHeader.classList.remove("is-hidden");
   }
+  if (y > 30) siteHeader.classList.add("is-scrolled");
+  else siteHeader.classList.remove("is-scrolled");
   lastScroll = y;
 }
 
 /* ---------------------------------------------------------------------------
-   Hero parallax (scroll) + pointer 3D motion
+   Parallax (scroll) + scrub-driven showcase
 --------------------------------------------------------------------------- */
 const heroShots = document.querySelectorAll(".hero-shot");
 const parallaxEls = document.querySelectorAll("[data-parallax]");
 const imgParallaxEls = document.querySelectorAll("[data-img-parallax]");
+const scrubSections = document.querySelectorAll("[data-scrub]");
 
 function applyParallax() {
   if (prefersReducedMotion) return;
@@ -268,33 +346,61 @@ function applyParallax() {
     el.style.setProperty("--scroll-y", `${(y * speed).toFixed(1)}px`);
   });
 
-  // Cover-image parallax: image drifts as its frame moves through the viewport.
   const vh = window.innerHeight;
   imgParallaxEls.forEach((img) => {
     const rect = img.getBoundingClientRect();
     if (rect.bottom < -200 || rect.top > vh + 200) return;
-    const progress = (rect.top + rect.height / 2 - vh / 2) / vh; // ~ -1..1
+    const progress = (rect.top + rect.height / 2 - vh / 2) / vh;
     const shift = Math.max(-6, Math.min(6, progress * -8));
     img.style.transform = `translateY(${shift.toFixed(2)}%) scale(1.16)`;
   });
 }
 
-function onScroll() {
-  syncFloatingAction();
-  syncHeader();
-  applyParallax();
+// Apple-style pinned scrub: drive a 0..1 progress as the tall section
+// scrolls through the viewport, then advance stepped feature panels.
+function applyScrub() {
+  if (prefersReducedMotion) return;
+  const vh = window.innerHeight;
+  scrubSections.forEach((section) => {
+    const rect = section.getBoundingClientRect();
+    const total = rect.height - vh;
+    if (total <= 0) return;
+    let p = (-rect.top) / total;
+    p = Math.max(0, Math.min(1, p));
+    section.style.setProperty("--p", p.toFixed(4));
+
+    const steps = section.querySelectorAll("[data-step]");
+    if (steps.length) {
+      // Map progress across steps; keep the first step active until ~12%.
+      const active = Math.min(steps.length - 1, Math.floor(p * steps.length * 1.0001));
+      steps.forEach((step, i) => step.classList.toggle("is-active", i === active));
+      const bars = section.querySelectorAll("[data-step-dot]");
+      bars.forEach((dot, i) => dot.classList.toggle("is-active", i === active));
+    }
+  });
 }
 
-syncFloatingAction();
-applyParallax();
-window.addEventListener("scroll", onScroll, { passive: true });
-window.addEventListener("resize", syncFloatingAction);
+function onScroll() {
+  syncHeader();
+  applyParallax();
+  applyScrub();
+}
 
+applyParallax();
+applyScrub();
+syncHeader();
+window.addEventListener("scroll", onScroll, { passive: true });
+window.addEventListener("resize", () => { applyParallax(); applyScrub(); });
+
+/* ---------------------------------------------------------------------------
+   Hero pointer 3D motion
+--------------------------------------------------------------------------- */
 let targetPointerX = 0;
 let targetPointerY = 0;
 let currentPointerX = 0;
 let currentPointerY = 0;
 let pointerTicking = false;
+const heroName = document.querySelector(".hero-name");
 
 function updatePointerMotion() {
   currentPointerX += (targetPointerX - currentPointerX) * 0.2;
@@ -335,7 +441,7 @@ function updatePointerMotion() {
   }
 }
 
-if (!prefersReducedMotion && finePointer) {
+if (!prefersReducedMotion && finePointer && heroName) {
   window.addEventListener("pointermove", (event) => {
     targetPointerX = (event.clientX / window.innerWidth) - 0.5;
     targetPointerY = (event.clientY / window.innerHeight) - 0.5;
@@ -349,21 +455,21 @@ if (!prefersReducedMotion && finePointer) {
 /* ---------------------------------------------------------------------------
    Marquee — continuous, seamless
 --------------------------------------------------------------------------- */
-const marqueeTrack = document.querySelector("[data-marquee]");
-if (marqueeTrack && !prefersReducedMotion) {
+document.querySelectorAll("[data-marquee]").forEach((marqueeTrack) => {
+  if (prefersReducedMotion) return;
   let offset = 0;
   let half = marqueeTrack.scrollWidth / 2;
+  const dir = marqueeTrack.hasAttribute("data-marquee-reverse") ? 1 : -1;
   window.addEventListener("resize", () => { half = marqueeTrack.scrollWidth / 2; });
-
   const speed = 0.6;
   function animateMarquee() {
-    offset -= speed;
+    offset += speed * dir;
     if (Math.abs(offset) >= half) offset = 0;
     marqueeTrack.style.transform = `translateX(${offset}px)`;
     requestAnimationFrame(animateMarquee);
   }
   requestAnimationFrame(animateMarquee);
-}
+});
 
 /* ---------------------------------------------------------------------------
    Custom cursor + magnetic buttons
@@ -372,9 +478,7 @@ const cursor = document.querySelector("[data-cursor]");
 const magneticEls = document.querySelectorAll("[data-magnetic]");
 
 if (cursor && finePointer && !prefersReducedMotion) {
-  // Hide the OS cursor so there's no double cursor.
   document.documentElement.classList.add("has-cursor");
-
   const dot = cursor.querySelector(".cursor-dot");
   const ring = cursor.querySelector(".cursor-ring");
 
@@ -387,7 +491,6 @@ if (cursor && finePointer && !prefersReducedMotion) {
     tx = event.clientX;
     ty = event.clientY;
     cursor.classList.add("active");
-    // Dot tracks the pointer instantly — feels precise, no lag.
     if (dot) dot.style.transform = `translate(${tx}px, ${ty}px) translate(-50%, -50%)`;
   }, { passive: true });
 
@@ -396,7 +499,6 @@ if (cursor && finePointer && !prefersReducedMotion) {
   document.addEventListener("mouseleave", () => cursor.classList.remove("active"));
 
   function renderCursor() {
-    // Ring eases behind for a smooth, premium trail.
     rx += (tx - rx) * 0.35;
     ry += (ty - ry) * 0.35;
     if (ring) ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
@@ -405,7 +507,7 @@ if (cursor && finePointer && !prefersReducedMotion) {
   requestAnimationFrame(renderCursor);
 
   const hoverTargets = document.querySelectorAll(
-    "a, button, .service-card, [data-magnetic], .resume-preview"
+    "a, button, .service-card, [data-magnetic], .resume-preview, .device-phone"
   );
   hoverTargets.forEach((el) => {
     el.addEventListener("pointerenter", () => cursor.classList.add("is-hover"));
@@ -422,14 +524,12 @@ if (finePointer && !prefersReducedMotion) {
       const relY = event.clientY - rect.top - rect.height / 2;
       el.style.transform = `translate(${(relX * strength).toFixed(1)}px, ${(relY * strength).toFixed(1)}px)`;
     });
-    el.addEventListener("pointerleave", () => {
-      el.style.transform = "";
-    });
+    el.addEventListener("pointerleave", () => { el.style.transform = ""; });
   });
 }
 
 /* ---------------------------------------------------------------------------
-   Tilt cards (subtle 3D on media/service cards)
+   Tilt cards
 --------------------------------------------------------------------------- */
 const tiltCards = document.querySelectorAll("[data-tilt-card]");
 if (finePointer && !prefersReducedMotion) {
@@ -441,9 +541,7 @@ if (finePointer && !prefersReducedMotion) {
       const py = (event.clientY - rect.top) / rect.height - 0.5;
       card.style.transform = `perspective(900px) rotateY(${(px * 5).toFixed(2)}deg) rotateX(${(-py * 5).toFixed(2)}deg)`;
     });
-    card.addEventListener("pointerleave", () => {
-      card.style.transform = "";
-    });
+    card.addEventListener("pointerleave", () => { card.style.transform = ""; });
   });
 }
 
@@ -512,13 +610,11 @@ function setFormStatus(message, type = "") {
 if (projectForm) {
   projectForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-
     const endpoint = projectForm.getAttribute("action") || "";
     if (!endpoint || endpoint.includes("YOUR_FORM_ID")) {
       setFormStatus("Add your Formspree form endpoint before this form can send.", "error");
       return;
     }
-
     const formData = new FormData(projectForm);
     const name = String(formData.get("name") || "").trim();
     formData.set("_subject", `Project inquiry from ${name || "portfolio visitor"}`);
@@ -536,7 +632,6 @@ if (projectForm) {
         body: formData,
         headers: { Accept: "application/json" },
       });
-
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
         const message = data.errors && data.errors.length
@@ -544,7 +639,6 @@ if (projectForm) {
           : "Something went wrong. Please try again or email me directly.";
         throw new Error(message);
       }
-
       projectForm.reset();
       setFormStatus("Project brief sent. I will get back to you soon.", "success");
     } catch (error) {
