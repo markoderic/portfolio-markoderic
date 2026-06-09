@@ -275,6 +275,9 @@ const desktopNav = window.matchMedia("(min-width: 1001px)");
 
 function syncNavMode() {
   if (!navRoot || !navToggle) return;
+  // Starts open on both desktop and mobile; the toggle can collapse it.
+  // Don't fight a user's manual collapse when they resize.
+  if (navRoot.dataset.userToggled) return;
   if (desktopNav.matches) {
     navRoot.classList.add("open");
     navToggle.setAttribute("aria-expanded", "true");
@@ -284,13 +287,17 @@ function syncNavMode() {
   }
 }
 syncNavMode();
-desktopNav.addEventListener("change", syncNavMode);
+desktopNav.addEventListener("change", () => {
+  // On a breakpoint change, reset to the sensible default for that size.
+  delete navRoot.dataset.userToggled;
+  syncNavMode();
+});
 
 if (navToggle && navRoot) {
   navToggle.addEventListener("click", () => {
-    if (desktopNav.matches) return;
     const isOpen = navRoot.classList.toggle("open");
     navToggle.setAttribute("aria-expanded", String(isOpen));
+    navRoot.dataset.userToggled = "1";
   });
 }
 
@@ -389,6 +396,18 @@ function applyScrub() {
       steps.forEach((step, i) => step.classList.toggle("is-active", i === active));
       const bars = section.querySelectorAll("[data-step-dot]");
       bars.forEach((dot, i) => dot.classList.toggle("is-active", i === active));
+    }
+
+    // Scroll-zoom video: play once it has zoomed in, pause when small/out of range.
+    if (section.hasAttribute("data-video-zoom")) {
+      const vid = section.querySelector("video");
+      if (vid) {
+        if (p > 0.12 && p < 0.99) {
+          if (vid.paused) vid.play().catch(() => {});
+        } else if (!vid.paused) {
+          vid.pause();
+        }
+      }
     }
   });
 }
@@ -569,13 +588,32 @@ const projectOpenButtons = document.querySelectorAll("[data-open-project]");
 const projectCloseButtons = document.querySelectorAll("[data-close-project]");
 let lastFocusedElement = null;
 
-function openModal(modal) {
+function openModal(modal, trigger) {
   if (!modal) return;
   lastFocusedElement = document.activeElement;
   modal.classList.add("open");
   modal.setAttribute("aria-hidden", "false");
   body.classList.add("modal-locked");
   if (lenis) lenis.stop();
+
+  // Origin-aware "pops up from where you clicked, flies to center and zooms in".
+  const dialog = modal.querySelector(".resume-dialog, .project-dialog");
+  if (dialog && trigger && !prefersReducedMotion) {
+    const tr = trigger.getBoundingClientRect();
+    const dx = Math.round((tr.left + tr.width / 2) - window.innerWidth / 2);
+    const dy = Math.round((tr.top + tr.height / 2) - window.innerHeight / 2);
+    dialog.style.transition = "none";
+    dialog.style.transformOrigin = "center center";
+    dialog.style.transform = `translate(${dx}px, ${dy}px) scale(0.12)`;
+    dialog.style.opacity = "0";
+    void dialog.offsetWidth; // flush
+    requestAnimationFrame(() => {
+      dialog.style.transition = "transform 480ms cubic-bezier(.16,1,.3,1), opacity 320ms ease";
+      dialog.style.transform = "translate(0px, 0px) scale(1)";
+      dialog.style.opacity = "1";
+    });
+  }
+
   const focusTarget = modal.querySelector("input, select, textarea, button, a");
   if (focusTarget) focusTarget.focus();
 }
@@ -584,6 +622,16 @@ function closeModal(modal) {
   if (!modal) return;
   modal.classList.remove("open");
   modal.setAttribute("aria-hidden", "true");
+  // Clear the origin-zoom inline styles once it has faded out.
+  const dialog = modal.querySelector(".resume-dialog, .project-dialog");
+  if (dialog) {
+    window.setTimeout(() => {
+      dialog.style.transition = "";
+      dialog.style.transform = "";
+      dialog.style.opacity = "";
+      dialog.style.transformOrigin = "";
+    }, 300);
+  }
   if (!document.querySelector(".modal.open")) {
     body.classList.remove("modal-locked");
     if (lenis) lenis.start();
@@ -593,9 +641,9 @@ function closeModal(modal) {
   }
 }
 
-resumeOpenButtons.forEach((b) => b.addEventListener("click", () => openModal(resumeModal)));
+resumeOpenButtons.forEach((b) => b.addEventListener("click", () => openModal(resumeModal, b)));
 resumeCloseButtons.forEach((b) => b.addEventListener("click", () => closeModal(resumeModal)));
-projectOpenButtons.forEach((b) => b.addEventListener("click", () => openModal(projectModal)));
+projectOpenButtons.forEach((b) => b.addEventListener("click", () => openModal(projectModal, b)));
 projectCloseButtons.forEach((b) => b.addEventListener("click", () => closeModal(projectModal)));
 
 window.addEventListener("keydown", (event) => {
@@ -664,4 +712,161 @@ if (projectForm) {
       }
     }
   });
+}
+
+/* ---------------------------------------------------------------------------
+   Brand logo cube — auto-spins, click-and-drag to rotate
+--------------------------------------------------------------------------- */
+const brandCube = document.querySelector(".brand-cube");
+if (brandCube) {
+  let ry = -22, rx = 18, dragging = false, lastX = 0, lastY = 0, moved = 0;
+  const idleSpin = prefersReducedMotion ? 0 : 0.25;
+  brandCube.style.animation = "none";
+
+  const apply = () => { brandCube.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`; };
+
+  brandCube.addEventListener("pointerdown", (event) => {
+    dragging = true; moved = 0; lastX = event.clientX; lastY = event.clientY;
+    if (brandCube.setPointerCapture) brandCube.setPointerCapture(event.pointerId);
+    event.preventDefault();
+  });
+
+  window.addEventListener("pointermove", (event) => {
+    if (!dragging) return;
+    const dx = event.clientX - lastX, dy = event.clientY - lastY;
+    moved += Math.abs(dx) + Math.abs(dy);
+    ry += dx * 0.6;
+    rx -= dy * 0.6;
+    rx = Math.max(-85, Math.min(85, rx));
+    lastX = event.clientX; lastY = event.clientY;
+  });
+
+  window.addEventListener("pointerup", () => { dragging = false; });
+  window.addEventListener("pointercancel", () => { dragging = false; });
+
+  // Don't navigate the brand link when the cube was actually dragged.
+  const brandLink = brandCube.closest("a");
+  if (brandLink) {
+    brandLink.addEventListener("click", (event) => {
+      if (moved > 6) { event.preventDefault(); event.stopImmediatePropagation(); moved = 0; }
+    }, true);
+  }
+
+  function spinCube() {
+    if (!dragging) ry += idleSpin;
+    apply();
+    requestAnimationFrame(spinCube);
+  }
+  spinCube();
+}
+
+/* ---------------------------------------------------------------------------
+   Text scramble / decode on scroll-in (short labels)
+--------------------------------------------------------------------------- */
+const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/#*<>";
+function scrambleElement(el) {
+  const finalText = el.dataset.scrambleText;
+  if (!finalText) return;
+  const len = finalText.length;
+  const duration = 620;
+  const start = performance.now();
+  function tick(now) {
+    const p = Math.min(1, (now - start) / duration);
+    const revealCount = p * len * 1.5;
+    let out = "";
+    for (let i = 0; i < len; i++) {
+      const ch = finalText[i];
+      if (ch === " ") { out += " "; continue; }
+      if (i < revealCount) out += ch;
+      else out += SCRAMBLE_CHARS[(Math.random() * SCRAMBLE_CHARS.length) | 0];
+    }
+    el.textContent = out;
+    if (p < 1) requestAnimationFrame(tick);
+    else el.textContent = finalText;
+  }
+  requestAnimationFrame(tick);
+}
+
+if (!prefersReducedMotion && "IntersectionObserver" in window) {
+  const scrambleTargets = document.querySelectorAll(".section-kicker, .project-tag");
+  const scrambleObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      if (!el.dataset.scrambleText) el.dataset.scrambleText = el.textContent.trim();
+      scrambleElement(el);
+      scrambleObserver.unobserve(el);
+    });
+  }, { threshold: 0.9 });
+  scrambleTargets.forEach((el) => scrambleObserver.observe(el));
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll-velocity skew (subtle, on [data-skew] blocks)
+--------------------------------------------------------------------------- */
+const skewEls = document.querySelectorAll("[data-skew]");
+if (skewEls.length && !prefersReducedMotion) {
+  let prevY = window.scrollY;
+  let skew = 0;
+  function skewLoop() {
+    const y = window.scrollY;
+    const v = y - prevY;
+    prevY = y;
+    const target = Math.max(-3.2, Math.min(3.2, v * 0.22));
+    skew += (target - skew) * 0.12;
+    if (Math.abs(skew) < 0.01) skew = 0;
+    skewEls.forEach((el) => { el.style.transform = `skewY(${skew.toFixed(2)}deg)`; });
+    requestAnimationFrame(skewLoop);
+  }
+  requestAnimationFrame(skewLoop);
+}
+
+/* ---------------------------------------------------------------------------
+   Generic "draw" trigger (charts / SVG strokes) on scroll-in
+--------------------------------------------------------------------------- */
+if ("IntersectionObserver" in window) {
+  const drawObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-drawn");
+        drawObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  document.querySelectorAll("[data-draw]").forEach((el) => drawObserver.observe(el));
+}
+
+/* ---------------------------------------------------------------------------
+   Horizontal pinned gallery — vertical scroll drives sideways motion
+--------------------------------------------------------------------------- */
+const hGallery = document.querySelector("[data-hgallery]");
+if (hGallery) {
+  const track = hGallery.querySelector("[data-hgallery-track]");
+  function layoutGallery() {
+    if (!track) return;
+    if (window.matchMedia("(max-width: 900px)").matches) {
+      hGallery.style.height = "";
+      track.style.transform = "";
+      return;
+    }
+    const distance = track.scrollWidth - window.innerWidth;
+    // Tall enough that the whole track scrolls through while pinned.
+    hGallery.style.height = `${window.innerHeight + Math.max(0, distance) + window.innerHeight * 0.4}px`;
+  }
+  function moveGallery() {
+    if (!track || prefersReducedMotion) return;
+    if (window.matchMedia("(max-width: 900px)").matches) { track.style.transform = ""; return; }
+    const rect = hGallery.getBoundingClientRect();
+    const total = hGallery.offsetHeight - window.innerHeight;
+    if (total <= 0) return;
+    let p = (-rect.top) / total;
+    p = Math.max(0, Math.min(1, p));
+    const distance = track.scrollWidth - window.innerWidth;
+    track.style.transform = `translate3d(${(-p * Math.max(0, distance)).toFixed(1)}px,0,0)`;
+  }
+  layoutGallery();
+  window.addEventListener("resize", () => { layoutGallery(); moveGallery(); });
+  window.addEventListener("scroll", moveGallery, { passive: true });
+  // also drive from Lenis if present (onScroll already calls window scroll listeners)
+  moveGallery();
 }

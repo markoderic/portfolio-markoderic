@@ -488,6 +488,7 @@ html.has-cursor select {
 
 .nav-pill {
   min-height: 54px;
+  max-width: 640px;
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -495,6 +496,7 @@ html.has-cursor select {
   overflow: visible;
   transform-origin: top center;
   transition:
+    max-width 460ms var(--ease-out),
     opacity 260ms ease,
     transform 460ms var(--ease-out),
     padding 360ms var(--ease-out),
@@ -1829,8 +1831,37 @@ h2 {
 
 /* ---------- Responsive ---------- */
 @media (min-width: 1001px) {
+  /* Desktop: nav starts open but can be collapsed with the toggle button. */
   .nav-toggle {
-    display: none;
+    display: inline-flex;
+    order: 2; /* sit to the right of the pill */
+  }
+
+  .nav-shell {
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-pill {
+    order: 1;
+    transform-origin: right center;
+  }
+
+  .nav-shell:not(.open) .nav-pill {
+    max-width: 0;
+    padding-inline: 0;
+    margin: 0;
+    gap: 0;
+    opacity: 0;
+    pointer-events: none;
+    border-color: transparent;
+    box-shadow: none;
+    transform: translateX(12px) scaleX(0.86);
+    overflow: hidden;
+  }
+
+  .nav-shell:not(.open) .nav-link {
+    opacity: 0;
   }
 }
 
@@ -3060,4 +3091,485 @@ html.webgl .showcase-stage > .showcase-phone {
   /* Mobile keeps the CSS phone + flat name; never show empty WebGL boxes. */
   .iphone-viewer { display: none !important; }
   .metal-name { display: none !important; }
+}
+
+/* ---------- Brand cube: draggable ---------- */
+.brand-cube {
+  cursor: grab;
+  touch-action: none;
+}
+.brand-cube:active {
+  cursor: grabbing;
+}
+
+/* ---------- About section metallic cube ---------- */
+.about-inner-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+/* Cube band: zero-height in the flow so the About->Contact spacing stays exactly
+   as before; the cube floats, centered on the boundary, on the right (same x). */
+.cube-band {
+  display: none;
+  position: relative;
+  z-index: 5;
+}
+
+html.webgl .cube-band {
+  display: block;
+  height: 0;
+  padding: 0;
+}
+
+.cube-band-inner {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(1180px, calc(100% - 44px));
+  display: flex;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+.about-cube {
+  display: none;
+}
+
+html.webgl .about-cube {
+  display: block;
+  width: min(500px, 44vw);
+  aspect-ratio: 1 / 1;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+html.webgl .about-cube canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+@media (max-width: 760px) {
+  .cube-band { display: none !important; }
+  .about-cube { display: none !important; }
+}
+
+/* =========================================================================
+   WebGL hover distortion canvas
+   ========================================================================= */
+.distort-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 320ms ease;
+  pointer-events: none;
+}
+[data-distort].distort-ready .distort-canvas { opacity: 1; }
+[data-distort].distort-ready > img { opacity: 0; }
+
+/* =========================================================================
+   Horizontal pinned gallery
+   ========================================================================= */
+.hgallery {
+  position: relative;
+  background:
+    radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.06), transparent 45%),
+    var(--black);
+  color: var(--white);
+}
+
+.hgallery-sticky {
+  position: sticky;
+  top: 0;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  overflow: hidden;
+  padding: 64px 0 44px;
+}
+
+.hgallery-head {
+  width: min(1180px, calc(100% - 44px));
+  margin: 0 auto;
+  will-change: transform;
+}
+
+.hgallery-head .section-kicker { color: rgba(255, 255, 255, 0.6); }
+.hgallery-head h2 { margin-top: 10px; }
+
+.hgallery-track {
+  display: flex;
+  gap: 22px;
+  padding: 0 max(22px, calc((100vw - 1180px) / 2));
+  width: max-content;
+  will-change: transform;
+}
+
+.hcard {
+  position: relative;
+  width: min(38vw, 460px);
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hcard-media {
+  position: relative;
+  height: 44vh;
+  max-height: 430px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-lg);
+  background: #111;
+}
+
+.hcard-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 800ms var(--ease), filter 600ms ease;
+  filter: saturate(0.9) contrast(0.96);
+}
+
+.hcard:hover .hcard-media img {
+  transform: scale(1.05);
+  filter: saturate(1) contrast(1);
+}
+
+.hcard-foot {
+  display: grid;
+  gap: 4px;
+}
+
+.hcard-foot span {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.76rem;
+  font-weight: 820;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hcard-foot strong { font-size: 1.18rem; }
+
+.hcard-cta {
+  width: min(30vw, 360px);
+  justify-content: center;
+  align-items: center;
+  border: 1px dashed rgba(255, 255, 255, 0.28);
+  border-radius: var(--radius-lg);
+  text-align: center;
+  transition: background 300ms ease, border-color 300ms ease;
+}
+
+.hcard-cta:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.hcard-arrow {
+  width: 20px; height: 20px;
+  border: 2px solid currentColor;
+  border-left: 0; border-bottom: 0;
+  transform: rotate(45deg);
+  margin-top: 16px;
+  transition: transform 260ms var(--ease);
+}
+.hcard-cta:hover .hcard-arrow { transform: rotate(45deg) translate(4px, -4px); }
+
+/* =========================================================================
+   Cinematic video reveal
+   ========================================================================= */
+.media-section.is-cinematic .media-frame {
+  position: relative;
+  transition: opacity 1000ms var(--ease), transform 1200ms var(--ease-out);
+}
+
+.media-section.is-cinematic .media-frame[data-reveal] {
+  transform: translateY(70px) scale(0.92);
+}
+.media-section.is-cinematic .media-frame[data-reveal].visible {
+  transform: translateY(0) scale(1);
+}
+
+.media-frame video {
+  border-radius: var(--radius-lg);
+}
+
+.media-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.media-tools span {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.8rem;
+  font-weight: 720;
+}
+
+/* =========================================================================
+   YouTube analytics dashboard
+   ========================================================================= */
+.analytics {
+  width: 100%;
+  padding: 100px max(22px, calc((100vw - 1180px) / 2));
+  color: var(--white);
+  background:
+    radial-gradient(circle at 15% 0%, rgba(255, 255, 255, 0.07), transparent 40%),
+    var(--black);
+}
+
+.analytics-inner {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+
+.analytics-head { max-width: 720px; will-change: transform; }
+.analytics-head .project-tag { color: rgba(255, 255, 255, 0.56); }
+.analytics-head h2 { margin: 10px 0 18px; line-height: 1.05; }
+.analytics-head p { color: rgba(255, 255, 255, 0.7); font-size: 1.06rem; line-height: 1.6; }
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-top: 46px;
+}
+
+.metric {
+  position: relative;
+  min-height: 150px;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.045);
+  overflow: hidden;
+  transition: transform 360ms var(--ease), border-color 360ms ease, background 360ms ease;
+}
+
+.metric:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.metric-wide { grid-column: span 2; }
+
+.metric span {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.metric strong {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 860;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.metric em {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.metric-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.spark {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 56%;
+}
+
+.spark svg { width: 100%; height: 100%; display: block; }
+
+.spark-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.spark-area { opacity: 0; transition: opacity 900ms ease 250ms; }
+
+.spark.is-drawn .spark-line {
+  transition: stroke-dashoffset 1600ms var(--ease-out);
+  stroke-dashoffset: 0;
+}
+.spark.is-drawn .spark-area { opacity: 1; }
+
+.analytics-panels {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.panel {
+  padding: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.panel h3 { font-size: 1.2rem; margin-bottom: 14px; }
+
+.panel ul { list-style: none; display: grid; gap: 10px; }
+
+.panel li {
+  position: relative;
+  padding-left: 22px;
+  color: rgba(255, 255, 255, 0.74);
+  line-height: 1.5;
+}
+
+.panel li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 9px;
+  width: 8px; height: 8px;
+  border-radius: 999px;
+  background: var(--white);
+  opacity: 0.7;
+}
+
+@media (max-width: 900px) {
+  .analytics-grid { grid-template-columns: repeat(2, 1fr); }
+  .metric-wide { grid-column: span 2; }
+  .analytics-panels { grid-template-columns: 1fr; }
+
+  /* Gallery becomes a normal vertical stack on small screens */
+  .hgallery-sticky { position: static; min-height: 0; display: block; padding: 64px 0; }
+  .hgallery-track {
+    flex-direction: column;
+    width: auto;
+    padding: 24px max(14px, calc((100vw - 1180px) / 2)) 0;
+    transform: none !important;
+  }
+  .hcard, .hcard-cta { width: 100%; }
+  .hcard-media { height: 60vw; max-height: 420px; }
+}
+
+@media (max-width: 600px) {
+  .analytics-grid { grid-template-columns: 1fr; }
+  .metric-wide { grid-column: span 1; }
+}
+
+/* =========================================================================
+   Scroll-zoom video (about page) — pinned; zooms in + plays as you scroll
+   ========================================================================= */
+.video-zoom {
+  position: relative;
+  height: 300vh;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.06), transparent 50%),
+    var(--black);
+}
+
+.video-zoom-sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.video-zoom-head {
+  position: absolute;
+  top: 5vh;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  text-align: center;
+  color: var(--white);
+  opacity: clamp(0, calc(1 - var(--p, 0) * 3), 1);
+}
+
+.video-zoom-head .section-kicker {
+  justify-content: center;
+  width: fit-content;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.6);
+}
+.video-zoom-head .section-kicker::before { display: none; }
+.video-zoom-head h2 {
+  margin: 0 auto;
+  max-width: 16ch;
+  line-height: 1.04;
+}
+
+.video-zoom-frame {
+  position: relative;
+  width: min(1280px, 94vw);
+  aspect-ratio: 16 / 9;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.55);
+  background: #000;
+  transform: scale(calc(0.36 + var(--p, 0) * 0.64));
+  will-change: transform;
+}
+
+.video-zoom-frame video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;   /* show the whole video inside the 16:9 frame */
+  display: block;
+  background: #000;
+}
+
+.video-zoom-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.72rem;
+  font-weight: 820;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  opacity: clamp(0, calc(1 - var(--p, 0) * 4), 1);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .video-zoom { height: auto; }
+  .video-zoom-sticky { position: static; height: auto; padding: 80px 14px; }
+  .video-zoom-head { position: static; opacity: 1; margin-bottom: 26px; }
+  .video-zoom-frame { transform: none; }
+  .video-zoom-hint { display: none; }
 }
