@@ -18,6 +18,8 @@
       try { if (sessionStorage.getItem("md-nav") === "1") document.documentElement.classList.add("is-entering"); } catch (e) {}
     })();
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
   <script src="main.js" defer></script>
 </head>
 
@@ -69,11 +71,11 @@
       <div class="page-hero-inner">
         <p class="eyebrow" data-reveal>About / Marko Deric</p>
         <h1 class="page-title" id="aboutHeroTitle">
-          <span class="line"><i>Design that</i></span>
-          <span class="line"><i>ships.</i></span>
+          <span class="line"><i>I build things</i></span>
+          <span class="line"><i>people use.</i></span>
         </h1>
         <p class="page-lead" data-reveal>
-          I'm an interactive media &amp; design student who likes the part where an idea becomes something real you can actually use — and then makes it feel effortless.
+          I'm an interactive media &amp; design student. I like the part where an idea turns into something real you can open and actually use.
         </p>
         <div class="page-hero-meta" data-reveal>
           <div><span>Discipline</span><strong>Interactive media &amp; design</strong></div>
@@ -88,7 +90,7 @@
       <div class="about-inner">
         <p class="section-kicker" data-reveal>What I care about</p>
         <h2 class="about-statement" data-reveal-words>
-          I care about work that feels considered. Clear layouts, honest motion, and details that hold up when you look twice — whether it's a marketing page or a 7,800-line app.
+          I like work that feels clear and unforced — good structure, motion with a reason, and details that still make sense up close, whether it's a landing page or a 7,800-line app.
         </h2>
       </div>
     </section>
@@ -97,7 +99,7 @@
     <section class="section profile-section" id="profile" aria-labelledby="profileTitle">
       <div class="profile-copy" data-reveal>
         <p class="section-kicker">Profile</p>
-        <h2 id="profileTitle">Built at the intersection of design, media, and business.</h2>
+        <h2 id="profileTitle">I work across design, media, and business.</h2>
         <p>
           I'm interested in the overlap between front-end development, product design, creative direction, business communication, and digital storytelling. I taught myself to build by building — most recently a complete personal-planner web app, from data model to motion.
         </p>
@@ -119,12 +121,12 @@
     <section class="section" id="skills" aria-labelledby="skillsTitle">
       <div class="section-heading">
         <p class="section-kicker" data-reveal>How I work</p>
-        <h2 id="skillsTitle" data-reveal>A maker who can take an idea from sketch to shipped.</h2>
+        <h2 id="skillsTitle" data-reveal>I can take an idea from a rough sketch to something finished.</h2>
       </div>
       <div class="skill-grid" data-stagger>
         <article class="skill-card" data-reveal>
           <h3>Design</h3>
-          <p>Layout, type, and motion in service of clarity — interfaces that feel calm and obvious to use.</p>
+          <p>Layout, type, and motion that keep an interface calm and obvious to use.</p>
           <div class="skill-list"><span>UI design</span><span>Design systems</span><span>Prototyping</span><span>Motion</span></div>
         </article>
         <article class="skill-card" data-reveal>
@@ -160,7 +162,7 @@
       <div class="video-zoom-sticky">
         <div class="video-zoom-head">
           <p class="section-kicker">Personal brand in motion</p>
-          <h2 id="filmTitle">Keep scrolling — and watch.</h2>
+          <h2 id="filmTitle">Scroll down and it plays.</h2>
         </div>
         <div class="video-zoom-frame">
           <video data-zoom-video muted loop playsinline controls preload="metadata">

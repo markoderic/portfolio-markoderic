@@ -137,6 +137,8 @@ function initLenis() {
   }
   requestAnimationFrame(raf);
   lenis.on("scroll", onScroll);
+  // Keep GSAP ScrollTrigger (if loaded) in sync with Lenis' smooth scroll.
+  if (window.ScrollTrigger) lenis.on("scroll", window.ScrollTrigger.update);
 }
 
 function scrollToTarget(target) {
@@ -870,3 +872,151 @@ if (hGallery) {
   // also drive from Lenis if present (onScroll already calls window scroll listeners)
   moveGallery();
 }
+
+/* ---------------------------------------------------------------------------
+   Hero dot field — a faint grid that lights up and parts around the cursor.
+   Pure pointer interaction (no scroll). Static fallback for touch / reduced
+   motion; pauses when the hero scrolls off-screen or the tab is hidden.
+--------------------------------------------------------------------------- */
+const heroGrid = document.querySelector("[data-hero-grid]");
+if (heroGrid) {
+  const ctx = heroGrid.getContext("2d");
+  const GAP = 34;     // spacing between dots (css px)
+  const R = 165;      // cursor influence radius (css px)
+  let w = 0, h = 0, cols = 0, rows = 0, offX = 0, offY = 0;
+  let px = -9999, py = -9999, tpx = -9999, tpy = -9999;
+  let visible = true, t = 0;
+
+  function size() {
+    const r = heroGrid.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = r.width; h = r.height;
+    heroGrid.width = Math.round(w * dpr);
+    heroGrid.height = Math.round(h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cols = Math.ceil(w / GAP) + 1;
+    rows = Math.ceil(h / GAP) + 1;
+    offX = (w - (cols - 1) * GAP) / 2;
+    offY = (h - (rows - 1) * GAP) / 2;
+  }
+
+  function drawStatic() {
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = "rgba(255,255,255,0.05)";
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        ctx.beginPath();
+        ctx.arc(offX + i * GAP, offY + j * GAP, 1, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+
+  function draw() {
+    px += (tpx - px) * 0.16;
+    py += (tpy - py) * 0.16;
+    t += 0.016;
+    ctx.clearRect(0, 0, w, h);
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        let x = offX + i * GAP, y = offY + j * GAP;
+        let a = 0.045 + 0.012 * Math.sin(t * 0.9 + i * 0.6 + j * 0.45); // idle breathing
+        let rad = 1;
+        const dx = x - px, dy = y - py;
+        const d = Math.hypot(dx, dy);
+        if (d < R) {
+          const e = (1 - d / R) ** 2;
+          a += e * 0.5;
+          rad += e * 1.8;
+          const push = e * 7;             // part away from the pointer
+          x += (dx / (d + 0.001)) * push;
+          y += (dy / (d + 0.001)) * push;
+        }
+        ctx.beginPath();
+        ctx.arc(x, y, rad, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${a.toFixed(3)})`;
+        ctx.fill();
+      }
+    }
+  }
+
+  size();
+
+  if (prefersReducedMotion || !finePointer) {
+    drawStatic();
+    window.addEventListener("resize", () => { size(); drawStatic(); });
+  } else {
+    window.addEventListener("resize", size);
+    window.addEventListener("pointermove", (e) => {
+      const r = heroGrid.getBoundingClientRect();
+      tpx = e.clientX - r.left;
+      tpy = e.clientY - r.top;
+    }, { passive: true });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver((ents) => { visible = ents[0].isIntersecting; }, { threshold: 0 }).observe(heroGrid);
+    }
+    (function loop() {
+      if (visible && !document.hidden) draw();
+      requestAnimationFrame(loop);
+    })();
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   GSAP ScrollTrigger — cinematic scroll layer (loaded from CDN; optional).
+   Additive: layers richer, scroll-driven motion onto big media + headings
+   without disturbing the existing pinned-scrub showcases or reveal system.
+   Skipped entirely under reduced motion or if the library failed to load.
+--------------------------------------------------------------------------- */
+function initGsap() {
+  if (prefersReducedMotion || !window.gsap || !window.ScrollTrigger) return;
+  const gsap = window.gsap;
+  gsap.registerPlugin(window.ScrollTrigger);
+
+  // A) The hero content lifts away as you scroll past it (transform only — an
+  // opacity tween here fights the children's entrance-reveal transitions).
+  const hero = document.querySelector(".hero");
+  const heroInner = document.querySelector(".hero-inner");
+  if (hero && heroInner) {
+    gsap.to(heroInner, {
+      yPercent: -12, ease: "none",
+      scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: 0.6 },
+    });
+  }
+
+  // B) Big media blocks wipe open with a clip-path reveal as they arrive.
+  const wipeTargets = document.querySelectorAll(
+    ".feature-project-media, .project-split-media, .channel-avatar, .service-card, .hcard-media, .media-frame, .resume-preview"
+  );
+  wipeTargets.forEach((el) => {
+    gsap.fromTo(el,
+      { clipPath: "inset(11% 6% 11% 6%)", opacity: 0.5 },
+      {
+        clipPath: "inset(0% 0% 0% 0%)", opacity: 1, ease: "power2.out",
+        scrollTrigger: { trigger: el, start: "top 90%", end: "top 52%", scrub: 0.8 },
+      }
+    );
+  });
+
+  // C) Section titles drift with depth as they pass through the viewport.
+  const driftTargets = document.querySelectorAll(
+    ".section-heading h2, .statement-band h2, .about-statement, .analytics-head h2, .feature-project-copy h2, .hgallery-head h2"
+  );
+  driftTargets.forEach((el) => {
+    gsap.fromTo(el, { yPercent: 9 }, {
+      yPercent: -9, ease: "none",
+      scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: 0.8 },
+    });
+  });
+
+  window.ScrollTrigger.refresh();
+}
+
+// GSAP is loaded via deferred CDN scripts before main.js. Run the setup once
+// the entrance reveals have settled, so ScrollTrigger.refresh()'s style recalc
+// can't freeze an in-progress reveal transition.
+function bootGsap() {
+  if (document.readyState === "complete") window.setTimeout(initGsap, 1300);
+  else window.addEventListener("load", () => window.setTimeout(initGsap, 1300));
+}
+bootGsap();

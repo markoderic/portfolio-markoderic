@@ -1,0 +1,15 @@
+# Dependencies (reinstall with: npm --prefix app install)
+node_modules/
+
+# Build output
+app/dist/
+
+# Vite
+app/.vite/
+
+# OS noise
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*

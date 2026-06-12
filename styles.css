@@ -598,6 +598,17 @@ html.has-cursor select {
     linear-gradient(180deg, rgba(5, 5, 5, 0.18), rgba(5, 5, 5, 0.86) 72%, #050505);
 }
 
+/* Cursor-reactive dot field — rests faint, lights up and parts around the
+   pointer. Sits deepest in the hero stack, under the screenshots + gradient. */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
 .hero-media {
   position: absolute;
   inset: 0;
@@ -3028,6 +3039,28 @@ html.is-entering .page-transition .page-transition-mark {
 .hero-name-stage {
   position: relative;
   width: fit-content;
+}
+
+/* Soft light pooled behind the name so it lifts off the dark hero. The glow's
+   centre tracks the cursor via --name-glow-x/y (set in main.js), so the name
+   feels lit from wherever you're pointing. */
+.hero-name-stage::before {
+  content: "";
+  position: absolute;
+  left: -10%;
+  top: -14%;
+  width: 120%;
+  height: 138%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    58% 58% at calc(48% + var(--name-glow-x, 0px)) calc(44% + var(--name-glow-y, 0px)),
+    rgba(255, 255, 255, 0.18),
+    rgba(255, 255, 255, 0.05) 46%,
+    transparent 72%
+  );
+  filter: blur(10px);
+  opacity: 0.85;
 }
 
 .metal-name {

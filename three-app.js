@@ -30,9 +30,9 @@ function getEnv(renderer) {
   // Kept bright all the way around so the metal reflects light at every angle
   // (like polished metal in sunlight) instead of catching dark spots.
   g.addColorStop(0.0, "#ffffff");
-  g.addColorStop(0.5, "#f4f6f8");
-  g.addColorStop(0.82, "#e2e6ea");
-  g.addColorStop(1.0, "#c2c7ce");
+  g.addColorStop(0.5, "#f7f9fb");
+  g.addColorStop(0.82, "#eaedf0");
+  g.addColorStop(1.0, "#dadee2");
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, 16, 256);
   const gradTex = new THREE.CanvasTexture(c);
@@ -55,6 +55,12 @@ function getEnv(renderer) {
   addBox(-14, 4, 6, 0.95);   // left side softbox -> shine when turned left
   addBox(14, 2, 6, 0.95);    // right side softbox -> shine when turned right
   addBox(-9, 11, 11, 0.7);
+  // Wrap lights all the way around so a sharp mirror never reflects a dark gap,
+  // no matter how far the letters / phone / cube rotate.
+  addBox(0, -9, 9, 0.9);     // under-light -> downward reflections stay bright
+  addBox(0, 3, -13, 0.9);    // back light -> grazing / far-rotated reflections
+  addBox(13, -4, 8, 0.7);    // lower-right
+  addBox(-13, -4, 8, 0.7);   // lower-left
 
   sharedEnv = pmrem.fromScene(envScene, 0.035).texture;
   return sharedEnv;
@@ -239,16 +245,21 @@ function initMetalName(container) {
   lFront.position.set(0, 0, 10);
   scene.add(lFront);
   scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+  // Sky/ground fill so faces angled away from the softboxes still pick up light.
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xaab0b8, 0.7));
 
   const group = new THREE.Group();
   scene.add(group);
 
-  // Polished silver: full metal with a slightly broader (brighter) reflection.
-  const material = new THREE.MeshStandardMaterial({
-    color: 0xf6f8fa,
+  // Polished liquid chrome: physically-based metal with a clearcoat sheen on
+  // top so the letters read like real wet-polished steel, not flat silver.
+  const material = new THREE.MeshPhysicalMaterial({
+    color: 0xf7f9fb,
     metalness: 1.0,
-    roughness: 0.2,
-    envMapIntensity: 1.3,
+    roughness: 0.26,        // softer mirror -> averages the bright env, no dark patches
+    envMapIntensity: 1.6,
+    clearcoat: 0.55,
+    clearcoatRoughness: 0.12,
   });
 
   let built = false;
@@ -278,11 +289,11 @@ function initMetalName(container) {
         size,
         height: depth,
         depth,
-        curveSegments: 10,
+        curveSegments: 14,
         bevelEnabled: true,
-        bevelThickness: size * 0.05,
-        bevelSize: size * 0.032,
-        bevelSegments: 4,
+        bevelThickness: size * 0.06,
+        bevelSize: size * 0.04,
+        bevelSegments: 7,
       });
       geo.computeBoundingBox();
       const bb = geo.boundingBox;
@@ -341,9 +352,10 @@ function initMetalName(container) {
     requestAnimationFrame(frame);
     if (!built || !pageVisible) return;
     const t = clock.getElapsedTime();
-    // Cursor rotation (follows the cursor) + a slow idle sway.
-    const targetY = pointer.x * 0.85 + Math.sin(t * 0.5) * 0.06;
-    const targetX = pointer.y * 0.5 + Math.cos(t * 0.4) * 0.04;
+    // Cursor rotation (follows the cursor) + a slow idle sway. Clamped so the
+    // letters never turn far enough to catch a dark reflection angle.
+    const targetY = clamp(pointer.x * 0.5, -0.5, 0.5) + Math.sin(t * 0.5) * 0.05;
+    const targetX = clamp(pointer.y * 0.32, -0.3, 0.3) + Math.cos(t * 0.4) * 0.03;
     ry = lerp(ry, targetY, 0.09);
     rx = lerp(rx, targetX, 0.09);
     group.rotation.set(rx, ry, 0);

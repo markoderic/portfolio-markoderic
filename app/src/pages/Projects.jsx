@@ -1,0 +1,325 @@
+import { Link } from "react-router-dom";
+
+export default function Projects() {
+  return (
+    <main id="top">
+      {/* Page hero */}
+      <section className="page-hero" id="planner" aria-labelledby="projectsTitle">
+        <div className="page-hero-grid" aria-hidden="true"></div>
+        <div className="page-hero-inner">
+          <p className="eyebrow" data-reveal>Selected work / 2024 — 2026</p>
+          <h1 className="page-title" id="projectsTitle">
+            <span className="line"><i>Things I've</i></span>
+            <span className="line"><i>designed &amp; built.</i></span>
+          </h1>
+          <p className="page-lead" data-reveal>
+            A small set of projects I'm proud of — led by Personal Planner, the most ambitious thing I've made. Scroll to walk through how it works.
+          </p>
+          <div className="page-hero-meta" data-reveal>
+            <div><span>Headliner</span><strong>Personal Planner (PWA)</strong></div>
+            <div><span>Range</span><strong>Apps · Dashboards · Web · Film</strong></div>
+            <div><span>Role</span><strong>Design + build, solo</strong></div>
+          </div>
+        </div>
+      </section>
+
+      {/* PLANNER: Apple-style pinned showcase */}
+      <div className="dark-wrap">
+        <section className="showcase" id="planner-showcase" data-scrub aria-label="Personal Planner walkthrough">
+          <div className="showcase-sticky">
+            <div className="showcase-intro">
+              <p className="section-kicker">Personal Planner — most advanced build</p>
+            </div>
+
+            <div className="showcase-text">
+              <div className="showcase-steps">
+                <article className="showcase-step is-active" data-step>
+                  <span className="showcase-step-index">01 — Dashboard</span>
+                  <h3>One calm home for the whole day.</h3>
+                  <p>Today's focus, money that's safe to spend, school load and upcoming bills — every part of life summarized the moment you open the app, with span filters from Today to a full paycheck cycle.</p>
+                </article>
+
+                <article className="showcase-step" data-step>
+                  <span className="showcase-step-index">02 — Finance</span>
+                  <h3>Knows what you can actually spend.</h3>
+                  <p>Paycheck cycles, bills, debt and subscriptions roll into a single "safe-to-spend" number that looks ahead in time. Full multi-currency support with live-style conversion across 150+ currencies.</p>
+                </article>
+
+                <article className="showcase-step" data-step>
+                  <span className="showcase-step-index">03 — Tasks &amp; Habits</span>
+                  <h3>Momentum you can see.</h3>
+                  <p>Tasks, recurring habits and streaks — visualized as Apple-Watch-style squares and rings so progress feels rewarding instead of like a checklist.</p>
+                </article>
+
+                <article className="showcase-step" data-step>
+                  <span className="showcase-step-index">04 — School, Calendar &amp; More</span>
+                  <h3>Built for a student's real life.</h3>
+                  <p>Assignment tracking, a unified calendar, health logging, notes and travel planning with real geo-data — nine connected modules that share one source of truth.</p>
+                </article>
+
+                <article className="showcase-step" data-step>
+                  <span className="showcase-step-index">05 — Engineered to last</span>
+                  <h3>Installs like an app. Works offline. Yours.</h3>
+                  <p>A true Progressive Web App: add it to your home screen, open it with no signal, and your data stays on your device. ~7,800 lines of hand-written JavaScript — no framework, no backend.</p>
+                </article>
+              </div>
+
+              <div className="showcase-rail" aria-hidden="true">
+                <span data-step-dot className="is-active"></span>
+                <span data-step-dot></span>
+                <span data-step-dot></span>
+                <span data-step-dot></span>
+                <span data-step-dot></span>
+              </div>
+            </div>
+
+            <div className="showcase-stage">
+              <div className="iphone-viewer" data-iphone="scroll" data-screenshot="/planner-app-screenshot.png" aria-hidden="true"></div>
+              <div className="showcase-phone">
+                <div className="device-phone">
+                  <span className="device-glow" aria-hidden="true"></span>
+                  <span className="device-buttons" aria-hidden="true"></span>
+                  <div className="device-screen">
+                    <img src="/planner-app-screenshot.png" alt="Personal Planner dashboard with daily focus, money, school and bills cards" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Planner spec band */}
+        <div className="spec-band">
+          <div className="stat-grid" data-stagger>
+            <div className="stat" data-reveal>
+              <strong data-count="9">0</strong>
+              <span>Connected life modules</span>
+            </div>
+            <div className="stat" data-reveal>
+              <strong data-count="7800" data-count-suffix="+">0</strong>
+              <span>Lines of JavaScript, hand-written</span>
+            </div>
+            <div className="stat" data-reveal>
+              <strong data-count="100" data-count-suffix="%">0</strong>
+              <span>Offline — no backend required</span>
+            </div>
+            <div className="stat" data-reveal>
+              <strong data-count="1">0</strong>
+              <span>Developer, end to end</span>
+            </div>
+          </div>
+
+          <div className="showcase-actions" data-reveal>
+            <a className="button button-light" href="https://markoderic.github.io/planner-app/" target="_blank" rel="noopener" data-magnetic>Open the live app</a>
+            <Link className="button button-ghost" to="/contact" data-magnetic>Want one like it?</Link>
+          </div>
+        </div>
+      </div>
+
+      {/* PulseBudget */}
+      <section className="feature-project" id="pulsebudget" aria-labelledby="workTitle">
+        <div className="feature-project-copy" data-reveal>
+          <p className="project-tag">02 — Dashboard UI</p>
+          <h2 id="workTitle">PulseBudget makes personal finance easy to see at a glance.</h2>
+          <p>
+            A dashboard interface that organizes spending, bills, savings goals, debt, subscriptions, and cash flow into one polished, scannable experience.
+          </p>
+          <div className="project-facts" aria-label="PulseBudget project details">
+            <span>Dashboard UI</span>
+            <span>Personal finance</span>
+            <span>Interactive web</span>
+          </div>
+          <a className="button button-dark" href="https://markoderic.github.io/finance-tracker/" target="_blank" rel="noopener" data-magnetic>View website</a>
+        </div>
+
+        <div className="feature-project-sticky">
+          <a className="feature-project-media" href="https://markoderic.github.io/finance-tracker/" target="_blank" rel="noopener" aria-label="Open PulseBudget Finance Tracker" data-tilt-card data-wipe>
+            <span className="media-index">02</span>
+            <img src="/finance-tracker-screenshot.png" alt="PulseBudget finance tracker interface" data-img-parallax />
+          </a>
+        </div>
+      </section>
+
+      {/* Approach band */}
+      <section className="statement-band" id="proof" aria-label="Portfolio approach">
+        <div className="statement-inner" data-reveal>
+          <p>Approach</p>
+          <h2>Show what each project is before asking anyone to dig in.</h2>
+          <span>Each one has a clear role, a real screenshot, and a link to the finished thing.</span>
+        </div>
+        <div className="process-row" aria-label="Project process" data-stagger>
+          <article data-reveal><span>01</span><h3>Clarify</h3><p>Define the audience, purpose, and the impression the work needs to make.</p></article>
+          <article data-reveal><span>02</span><h3>Shape</h3><p>Turn the goal into layout, visual direction, interaction, and content structure.</p></article>
+          <article data-reveal><span>03</span><h3>Ship</h3><p>Refine the finish so the final page, app, or dashboard feels complete.</p></article>
+        </div>
+      </section>
+
+      {/* Streetwear catalog */}
+      <section className="project-split section-light" id="catalog" aria-labelledby="catalogTitle">
+        <div className="project-split-sticky">
+          <a className="project-split-media" href="https://ims322-sheffield-2026-spring.github.io/product-catalog-markoderic/" target="_blank" rel="noopener" aria-label="Open Streetwear Product Catalog" data-tilt-card data-wipe="right">
+            <span className="media-index">03</span>
+            <img src="/productcatalogscreenshot.jpeg" alt="Streetwear product catalog website interface" data-img-parallax />
+          </a>
+        </div>
+        <div className="project-split-copy" data-reveal>
+          <p className="project-tag">03 — Web interface</p>
+          <h2 id="catalogTitle">A clean catalog concept for product discovery.</h2>
+          <p>
+            Streetwear Product Catalog is a storefront concept built with HTML, CSS, and JavaScript. The layout prioritizes browsing, pricing clarity, and a polished first impression.
+          </p>
+          <div className="project-facts"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Retail UI</span></div>
+          <a className="text-link" href="https://ims322-sheffield-2026-spring.github.io/product-catalog-markoderic/" target="_blank" rel="noopener" data-magnetic>View website</a>
+        </div>
+      </section>
+
+      {/* Brand film */}
+      <section className="media-section is-cinematic" id="media" aria-labelledby="mediaTitle">
+        <div className="media-copy" data-reveal>
+          <p className="project-tag">04 — Personal brand in motion</p>
+          <h2 id="mediaTitle">A short personal intro, cut to a rhythm.</h2>
+          <p>This short film shows how I think about editing, pacing, storytelling, and building a personal brand — the same instincts I bring to the web work.</p>
+          <div className="media-tools" aria-label="Tools used">
+            <span>Premiere Pro</span>
+            <span>CapCut</span>
+            <span>Editing</span>
+            <span>Storytelling</span>
+          </div>
+        </div>
+        <div className="media-frame" data-reveal>
+          <video controls preload="metadata" playsInline>
+            <source src="/personalbrandingvideo.mp4" type="video/mp4" />
+          </video>
+        </div>
+      </section>
+
+      {/* Animal Feed */}
+      <section className="channel-section" id="channel" aria-labelledby="channelTitle">
+        <a className="channel-avatar" href="https://www.youtube.com/@animalfeedreal" target="_blank" rel="noopener" aria-label="Open Animal Feed YouTube channel" data-reveal data-tilt-card>
+          <img src="/animalfeedpfp.jpeg" alt="Animal Feed channel profile artwork" data-img-parallax />
+        </a>
+        <div className="channel-copy" data-reveal>
+          <p className="project-tag">05 — Content channel</p>
+          <h2 id="channelTitle">Animal Feed is where I test what makes short clips work.</h2>
+          <p>A short-form YouTube channel focused on quick entertaining clips, recognizable identity, and lightweight content systems.</p>
+          <div className="project-facts"><span>YouTube</span><span>Short-form content</span><span>Channel identity</span></div>
+          <a className="text-link" href="https://www.youtube.com/@animalfeedreal" target="_blank" rel="noopener" data-magnetic>Visit channel</a>
+        </div>
+      </section>
+
+      {/* Content analytics dashboard */}
+      <section className="analytics" id="analytics" aria-labelledby="analyticsTitle">
+        <div className="analytics-inner">
+          <div className="analytics-head" data-skew>
+            <p className="project-tag" data-reveal>06 — Content analytics</p>
+            <h2 id="analyticsTitle" data-reveal>Real audience growth, measured over time.</h2>
+            <p data-reveal>Animal Feed is my short-form testing ground — millions of views spent learning what makes hooks, retention, and formats actually work.</p>
+          </div>
+
+          <div className="analytics-grid" data-stagger>
+            <article className="metric metric-wide" data-reveal>
+              <div className="metric-top">
+                <span>Total views</span>
+                <strong data-count="3" data-count-suffix="M+">0</strong>
+              </div>
+              <div className="spark" data-draw aria-hidden="true">
+                <svg viewBox="0 0 320 110" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="gradViews" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0" stopColor="rgba(255,255,255,0.35)" />
+                      <stop offset="1" stopColor="rgba(255,255,255,0)" />
+                    </linearGradient>
+                  </defs>
+                  <path className="spark-area" d="M0,100 C40,96 70,90 100,80 C140,66 170,48 200,38 C240,24 280,12 320,6 L320,110 L0,110 Z" fill="url(#gradViews)" />
+                  <path className="spark-line" pathLength="1" d="M0,100 C40,96 70,90 100,80 C140,66 170,48 200,38 C240,24 280,12 320,6" fill="none" stroke="#ffffff" strokeWidth="2.5" />
+                </svg>
+              </div>
+            </article>
+
+            <article className="metric metric-wide" data-reveal>
+              <div className="metric-top">
+                <span>Subscribers</span>
+                <strong data-count="3000" data-count-suffix="+">0</strong>
+              </div>
+              <div className="spark" data-draw aria-hidden="true">
+                <svg viewBox="0 0 320 110" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="gradSubs" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0" stopColor="rgba(255,255,255,0.3)" />
+                      <stop offset="1" stopColor="rgba(255,255,255,0)" />
+                    </linearGradient>
+                  </defs>
+                  <path className="spark-area" d="M0,104 C50,100 90,92 130,84 C170,76 200,60 240,48 C275,38 300,30 320,22 L320,110 L0,110 Z" fill="url(#gradSubs)" />
+                  <path className="spark-line" pathLength="1" d="M0,104 C50,100 90,92 130,84 C170,76 200,60 240,48 C275,38 300,30 320,22" fill="none" stroke="#ffffff" strokeWidth="2.5" />
+                </svg>
+              </div>
+            </article>
+
+            <article className="metric" data-reveal>
+              <span>Best performing Short</span>
+              <strong data-count="600" data-count-suffix="K+">0</strong>
+            </article>
+            <article className="metric" data-reveal>
+              <span>Avg retention</span>
+              <strong data-count="80" data-count-suffix="%">0</strong>
+              <em>sample figure</em>
+            </article>
+            <article className="metric" data-reveal>
+              <span>Cadence tested</span>
+              <strong>1× vs 2× / day</strong>
+            </article>
+            <article className="metric" data-reveal>
+              <span>Main niche</span>
+              <strong>Animal Shorts</strong>
+            </article>
+          </div>
+
+          <div className="analytics-panels">
+            <article className="panel" data-reveal>
+              <h3>What I tested</h3>
+              <ul>
+                <li>Hook strength in the first 1–2 seconds</li>
+                <li>Posting times and 1×/day vs 2×/day cadence</li>
+                <li>Retention curves and re-watch loops</li>
+                <li>Emotional appeal and format variations</li>
+              </ul>
+            </article>
+            <article className="panel" data-reveal>
+              <h3>What it proves</h3>
+              <ul>
+                <li>I understand short-form strategy and audience behavior</li>
+                <li>I make data-driven, iterative content decisions</li>
+                <li>I can grow real reach, not just finish assignments</li>
+                <li>I translate analytics into a repeatable system</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="contact-section" aria-labelledby="ctaTitle">
+        <div className="contact-inner">
+          <div className="contact-lead" data-reveal>
+            <p className="section-kicker">Next</p>
+            <h2 id="ctaTitle">Want to make something together?</h2>
+            <p>Tell me what you're building and I'll come back with a clear, considered plan.</p>
+            <div className="hero-actions" style={{ marginTop: 6 }}>
+              <Link className="button button-light" to="/contact" data-magnetic>Start a project</Link>
+              <Link className="button button-ghost" to="/about" data-magnetic>About me</Link>
+            </div>
+          </div>
+          <div className="contact-links" data-reveal>
+            <a href="mailto:markoderic04@gmail.com" data-magnetic><span>Email</span><strong>markoderic04@gmail.com</strong></a>
+            <a href="https://www.linkedin.com/in/markoderic/" target="_blank" rel="noopener" data-magnetic><span>LinkedIn</span><strong>Connect professionally</strong></a>
+          </div>
+        </div>
+      </section>
+
+      <button className="floating-action" type="button" data-open-project aria-label="Open project form" data-magnetic>
+        <span>Start a project</span>
+        <span className="cta-dots" aria-hidden="true"></span>
+      </button>
+    </main>
+  );
+}
