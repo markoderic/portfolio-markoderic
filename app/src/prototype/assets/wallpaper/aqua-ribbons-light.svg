@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <title>Aqua Ribbons — original light desktop illustration</title>
+  <defs>
+    <linearGradient id="field" x2=".85" y2="1"><stop stop-color="#29659f"/><stop offset=".52" stop-color="#6fb6dc"/><stop offset="1" stop-color="#b6dcf0"/></linearGradient>
+    <radialGradient id="air" cx=".72" cy=".19" r=".8"><stop stop-color="#e1f4fc" stop-opacity=".72"/><stop offset="1" stop-color="#c5e6f9" stop-opacity="0"/></radialGradient>
+    <linearGradient id="deep" x1="0" y1="1" x2=".72" y2="0"><stop stop-color="#163e7b"/><stop offset=".5" stop-color="#2b76b6"/><stop offset="1" stop-color="#80c5e8"/></linearGradient>
+    <linearGradient id="fold" x1=".2" y1="0" x2=".8" y2="1"><stop stop-color="#edfaff" stop-opacity=".94"/><stop offset=".24" stop-color="#a5d5ec" stop-opacity=".65"/><stop offset="1" stop-color="#448cbb" stop-opacity=".15"/></linearGradient>
+    <linearGradient id="edge" x1="0" x2="1" y2=".3"><stop stop-color="#dcf7ff" stop-opacity=".12"/><stop offset=".5" stop-color="#ebfbff" stop-opacity=".8"/><stop offset="1" stop-color="#e2f7ff" stop-opacity=".1"/></linearGradient>
+  </defs>
+  <path fill="url(#field)" d="M0 0h1600v1000H0z"/>
+  <path fill="url(#air)" d="M0 0h1600v1000H0z"/>
+  <path fill="url(#deep)" d="M-140 50C175 575 510 695 922 505S1385 154 1700 278V1080H-140Z"/>
+  <path fill="url(#fold)" d="M-120 30C192 603 513 710 928 520S1420 190 1710 302C1344 221 1215 637 775 769S138 580-120 30Z"/>
+  <path fill="url(#fold)" opacity=".48" d="M-80 706C335 1019 659 582 1031 627S1503 871 1700 565V1090H-80Z"/>
+  <path fill="none" stroke="url(#edge)" stroke-width="3" d="M-120 30C192 603 513 710 928 520S1420 190 1710 302"/>
+  <path fill="none" stroke="url(#edge)" stroke-width="2" opacity=".55" d="M-80 706C335 1019 659 582 1031 627S1503 871 1700 565"/>
+</svg>

@@ -1,0 +1,5 @@
+/* Explicit local diagnostics; no permanent overlay or scene input proxy. */
+.runtime-diagnostics { position:fixed; inset:50% auto auto 50%; transform:translate(-50%,-50%); width:min(560px,calc(100vw - 32px)); max-height:calc(100dvh - 40px); overflow:auto; z-index:10000; padding:22px; border:1px solid #666; border-radius:12px; background:#151719; color:#f3f3f3; box-shadow:0 12px 70px #0009; font:13px/1.5 monospace; pointer-events:auto; }
+.runtime-diagnostics h2 { font-size:16px; }.runtime-diagnostics pre { white-space:pre-wrap; font-size:11px; min-height:80px; }
+.runtime-diagnostics button { margin:4px; padding:9px; color:inherit; background:#30363a; border:1px solid #78818a; border-radius:5px; }.runtime-diagnostics button:focus-visible { outline:2px solid white; }
+.runtime-diagnostics-backdrop { position:fixed; inset:0; z-index:10000; pointer-events:auto; background:#0004; }

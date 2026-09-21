@@ -1,0 +1,46 @@
+--- upstream/library_sdl.js
++++ owned/library_sdl.js
+@@ -1395,15 +1395,15 @@
+     // capture all key events. we just keep down and up, but also capture press to prevent default actions
+     if (!Module['doNotCaptureKeyboard']) {
+       var keyboardListeningElement = Module['keyboardListeningElement'] || document;
+-      keyboardListeningElement.addEventListener("keydown", SDL.receiveEvent);
+-      keyboardListeningElement.addEventListener("keyup", SDL.receiveEvent);
+-      keyboardListeningElement.addEventListener("keypress", SDL.receiveEvent);
+-      window.addEventListener("focus", SDL.receiveEvent);
+-      window.addEventListener("blur", SDL.receiveEvent);
+-      document.addEventListener("visibilitychange", SDL.receiveEvent);
+-    }
+-
+-    window.addEventListener("unload", SDL.receiveEvent);
++      Module['classicListen'](keyboardListeningElement, "keydown", SDL.receiveEvent);
++      Module['classicListen'](keyboardListeningElement, "keyup", SDL.receiveEvent);
++      Module['classicListen'](keyboardListeningElement, "keypress", SDL.receiveEvent);
++      Module['classicListen'](window, "focus", SDL.receiveEvent);
++      Module['classicListen'](window, "blur", SDL.receiveEvent);
++      Module['classicListen'](document, "visibilitychange", SDL.receiveEvent);
++    }
++
++    Module['classicListen'](window, "unload", SDL.receiveEvent);
+     SDL.keyboardState = _calloc(0x10000, 1); // Our SDL needs 512, but 64K is safe for older SDLs
+     // Initialize this structure carefully for closure
+     SDL.DOMEventToSDLEvent['keydown']    = {{{ cDefs.SDL_KEYDOWN }}};
+@@ -1491,7 +1491,7 @@
+      'mousedown', 'mouseup', 'mousemove',
+      'mousewheel', 'wheel', 'mouseout',
+      'DOMMouseScroll',
+-    ].forEach((e) => Module['canvas'].addEventListener(e, SDL.receiveEvent, true));
++    ].forEach((e) => { if (!Module['classicInput']) Module['classicListen'](Module['canvas'], e, SDL.receiveEvent, true); });
+ 
+     var canvas = Module['canvas'];
+ 
+@@ -1760,7 +1760,8 @@
+   SDL_WM_SetCaption__deps: ['emscripten_set_window_title'],
+   SDL_WM_SetCaption: (title, icon) => {
+     if (title) {
+-      _emscripten_set_window_title(title);
++      if (Module['classicSetTitle']) Module['classicSetTitle'](UTF8ToString(title));
++      else _emscripten_set_window_title(title);
+     }
+     icon &&= UTF8ToString(icon);
+   },

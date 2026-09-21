@@ -1,0 +1,178 @@
+--- original/main.cpp
++++ game/main.cpp
+@@ -7,13 +7,23 @@
+ 
+ #define Mix_HaltMusic() TSS_Play(0, NULL, 0)
+ 
++static bool classicInitialized = false;
++static bool classicRunning = false;
++#ifdef CLASSIC_TEST
++static int classicTicks = 0;
++#endif
+ void loop() {
++    if (!classicRunning) return;
+     static bool skip = false;
+     if (!skip || (CheckHitKey(KEY_INPUT_SPACE) == 1)) {
+         maint = 0;
+         UpdateKeys();
+-        if (WaitKeyHelper())
++        if (WaitKeyHelper()) {
++#ifdef CLASSIC_TEST
++            ++classicTicks;
++#endif
+             Mainprogram();
++        }
+     }
+     skip = !skip;
+ }
+@@ -28,6 +38,7 @@
+ 	return 1;
+ 
+ //全ロード
++    classicInitialized = true;
+     loadg();
+ 
+ //フォント
+@@ -37,7 +48,7 @@
+ //ループ
+ //for (maint=0;maint<=2;maint++){
+ #ifdef EMSCRIPTEN
+-    emscripten_set_main_loop(loop, 0, 1);
++    return 0; // Explicit Start; the instance owner drives fixed 60 Hz callbacks.
+ #else
+     while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0) {
+ 	UpdateKeys();
+@@ -50,6 +61,24 @@
+ //ＤＸライブラリ使用の終了処理
+     end();
+ #endif
++}
++
++void deinit();
++extern bool keysHeld[];
++void ClassicWakeWait();
++extern "C" {
++EMSCRIPTEN_KEEPALIVE void classic_release() { memset(keysHeld, 0, sizeof(bool) * SDLK_LAST); SDL_Event e; while (SDL_PollEvent(&e)) {} }
++EMSCRIPTEN_KEEPALIVE void classic_start() { if (classicInitialized && !classicRunning) { classic_release(); classicRunning = true;  } }
++EMSCRIPTEN_KEEPALIVE void classic_pause() { classicRunning = false; if(classicInitialized) classic_release(); }
++EMSCRIPTEN_KEEPALIVE void classic_key(int key, int down) { if (classicRunning && key >= 0 && key < SDLK_LAST) { if (down && !keysHeld[key]) ClassicWakeWait(); keysHeld[key] = down != 0; } }
++EMSCRIPTEN_KEEPALIVE int classic_at_title() { return mainZ == 100; }
++EMSCRIPTEN_KEEPALIVE void classic_tick() { loop(); }
++#ifdef CLASSIC_TEST
++EMSCRIPTEN_KEEPALIVE int classic_debug(int field) { switch(field) { case 0:return classicTicks; case 1:return mainZ; case 2:return ma; case 3:return mb; case 4:return classicRunning; case 5:return classicInitialized; default:return -1; } }
++EMSCRIPTEN_KEEPALIVE void classic_probe_wait() { WaitKey(); }
++EMSCRIPTEN_KEEPALIVE int classic_held(int key) { return key >= 0 && key < SDLK_LAST && keysHeld[key]; }
++#endif
++EMSCRIPTEN_KEEPALIVE void classic_dispose() { classic_pause(); if (classicInitialized) deinit(); }
+ }
+ 
+ //メイン描画
+@@ -4733,6 +4762,8 @@
+ //終了
+ void deinit()
+ {
++    if (!classicInitialized) return;
++    classicInitialized = false;
+     setc0();
+     FillScreen();
+     DrawString(200, 200, "EXITING...", GetColor(255, 255, 255));
+@@ -4747,12 +4778,15 @@
+ //--
+ 
+ //SOUNDS
++#ifndef EMSCRIPTEN
+     for (int i = 1; i < 6; i++)
+ 	Mix_FreeMusic(otom[i]);
+     for (int i = 1; i < 19; i++)
+ 	Mix_FreeChunk(oto[i]);
+ //--
+ 
++// Web sound handles are TSS integer IDs, not SDL allocations.
++#endif
+ //Font
+     for (int i = 0; i < FONT_MAX; i++)
+ 	TTF_CloseFont(font[i]);
+--- original/DxLib.cpp
++++ game/DxLib.cpp
+@@ -10,7 +10,7 @@
+ }
+ void TSS_Play(int channel, void* c, int loops) {
+     int id = (int)c;
+-    EM_ASM_INT({PlaySound($0, $1)}, id, channel);
++    EM_ASM({ Module['classicSound']($0, $1); }, id, channel);
+ }
+ #endif
+ 
+@@ -58,10 +58,14 @@
+ 
+     //Audio Rate, Audio Format, Audio Channels, Audio Buffers
+ #define AUDIO_CHANNELS 4
++
++#ifndef EMSCRIPTEN
+     if (sound && Mix_OpenAudio(22050, AUDIO_S16SYS, AUDIO_CHANNELS, 1024)) {
+         fprintf(stderr, "Unable to init SDL_mixer: %s\n", Mix_GetError());
+         sound = false;
+         }
++
++#endif // Web audio is owned by the chime bridge.
+     //Try to get a joystick
+     joystick = SDL_JoystickOpen(0);
+ 
+@@ -106,7 +110,7 @@
+ 
+ void DrawString(int a, int b, const char *x, Uint32 c)
+ {
+-    SDL_Color color = { c >> 16, c >> 8, c };
++    SDL_Color color = { (Uint8)(c >> 16), (Uint8)(c >> 8), (Uint8)c };
+     SDL_Surface *rendered = TTF_RenderUTF8_Solid(font[fontsize], x, color);
+     if (fontType == DX_FONTTYPE_EDGE) {
+ 	SDL_Color blk = { 0, 0, 0 };
+@@ -133,7 +137,7 @@
+     vsprintf(newstr, str, args);
+     va_end(args);
+     DrawString(a, b, newstr, color);
+-    delete newstr;
++    delete[] newstr;
+ }
+ 
+ //void DrawFormatString(int a, int b, int c
+@@ -142,6 +146,9 @@
+ #define KEY_INPUT_ESCAPE SDLK_ESCAPE
+ 
+ bool ex = false;
++
++static bool waiting = false;
++void ClassicWakeWait() { waiting = false; }
+ 
+ void UpdateKeys()
+ {
+@@ -149,6 +156,7 @@
+     while (SDL_PollEvent(&event)) {
+ 	switch (event.type) {
+ 	case SDL_KEYDOWN:
++        waiting = false;
+ 	    keysHeld[event.key.keysym.sym] = true;
+ 	    break;
+ 	case SDL_KEYUP:
+@@ -196,20 +204,7 @@
+ }
+ 
+ #ifdef EMSCRIPTEN
+-static bool waiting = false;
+-
+-bool WaitKeyHelper()
+-{
+-    if (!waiting)
+-        return true;
+-    SDL_Event event;
+-    SDL_PollEvent(&event);
+-    if (event.type == SDL_KEYDOWN) {
+-        waiting = false;
+-        return true;
+-    }
+-    return false;
+-}
++bool WaitKeyHelper() { return !waiting; }
+ 
+ void WaitKey()
+ {

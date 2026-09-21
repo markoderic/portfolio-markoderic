@@ -1,0 +1,9 @@
+import fs from 'node:fs';import * as T from 'three';
+import {mountFan} from './support/fan-scene-fixture.mjs';
+import {FAN} from '../src/prototype/fanMotion.js';import {deformStreamers} from '../src/prototype/fanGeometry.js';
+const dir=new URL('../../docs/redesign/session-33-fan-continuity/',import.meta.url);
+export function meshesFrom(root){root.updateMatrixWorld(true);const meshes=[];root.traverse(o=>{if(!o.isMesh)return;const a=o.geometry.attributes.position,n=o.geometry.attributes.normal,nm=new T.Matrix3().getNormalMatrix(o.matrixWorld),positions=[],normals=[];for(let i=0;i<a.count;i++){positions.push(new T.Vector3().fromBufferAttribute(a,i).applyMatrix4(o.matrixWorld).toArray());if(n)normals.push(new T.Vector3().fromBufferAttribute(n,i).applyNormalMatrix(nm).toArray());}const m=o.material;meshes.push({root:'fan',name:o.name,positions,normals,indices:o.geometry.index?[...o.geometry.index.array]:Array.from({length:a.count},(_,i)=>i),color:m.color.toArray(),roughness:m.roughness,metalness:m.metalness,side:m.side,castShadow:['fan-base','fan-neck','fan-switch','fan-housing','fan-motor'].includes(o.name)});});return meshes;}
+const f=mountFan();f.root.getObjectByName('fan-yaw').rotation.y=FAN.direction;f.root.getObjectByName('fan-rotor').rotation.z=.6;const strip=f.root.getObjectByName('fan-streamers');deformStreamers(strip.geometry,1,0);
+const after=strip.material.color.clone();
+for(const tag of ['before','after']){strip.material.color.copy(tag==='before'?new T.Color('#dedace'):after);fs.writeFileSync(new URL(tag+'-fan.json',dir),JSON.stringify({meshes:meshesFrom(f.root)})+'\n');}
+fs.writeFileSync(new URL('material.json',dir),JSON.stringify({before:'#dedace',after:'#'+after.getHexString(),roughness:strip.material.roughness,metalness:strip.material.metalness,emissive:strip.material.emissive.getHexString(),side:strip.material.side,note:'Actual runtime geometry/material export; matched SceneKit approximation only.'},null,2)+'\n');

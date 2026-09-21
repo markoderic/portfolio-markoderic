@@ -1,0 +1,61 @@
+{
+  "artwork": [
+    {
+      "path": "game/data/res/brock.PNG",
+      "bytes": 1291,
+      "sha256": "01ddab465a6e961459adb6e8b3d3322486c00c1303747ffb66f80ebf8022d717",
+      "modification": "none"
+    },
+    {
+      "path": "game/data/res/brock2.PNG",
+      "bytes": 1284,
+      "sha256": "071beb6034b1bc95331cfe93c91c05ae66fd2fe453bd1ca4fe56a28af49ea2ef",
+      "modification": "none"
+    },
+    {
+      "path": "game/data/res/haikei.PNG",
+      "bytes": 2257,
+      "sha256": "1821f2e95c904ce47bda9c8cf2666a5cd26c83aaf817276ffd7773f3680c5add",
+      "modification": "none"
+    },
+    {
+      "path": "game/data/res/item.PNG",
+      "bytes": 1867,
+      "sha256": "efe02fcc59566d63a13b0ba6db8f7d029217c8f27d774c1dc7d0d33b3d9e43ab",
+      "modification": "none"
+    },
+    {
+      "path": "game/data/res/omake.PNG",
+      "bytes": 2754,
+      "sha256": "1a3f8d45e0d15179898339e38c2a7d355476c1ba8da4d2de223ef9fafa5563aa",
+      "modification": "none"
+    },
+    {
+      "path": "game/data/res/omake2.PNG",
+      "bytes": 2119,
+      "sha256": "c09c1a06051b9d8fad5b7a1dc7218e89b6382e5e8b0de3699b64552d2978002c",
+      "modification": "none"
+    },
+    {
+      "path": "game/data/res/player.PNG",
+      "bytes": 583,
+      "sha256": "a509e486e1c1666076f6f717d183bdabd13aec93a9834ca2acd17ba7b8b959c1",
+      "modification": "none"
+    },
+    {
+      "path": "game/data/res/syobon3.PNG",
+      "bytes": 16453,
+      "sha256": "97c0170308337ae4565d36a5184825c7c2d5ba048053ed5b582bcb51de435b98",
+      "modification": "none"
+    },
+    {
+      "path": "game/data/res/teki.PNG",
+      "bytes": 1460,
+      "sha256": "c7862e6a77fd9b4231c4370729dee91ffc921eea68bd524c8fc682c390faf337",
+      "modification": "none"
+    }
+  ],
+  "icon": "player.PNG is a byte-identical copy of game/data/res/player.PNG; first frame only in SVG viewport",
+  "scores": "17 supplied scripts; 16 mapped cues, coin unused; seven requested cues unavailable",
+  "font": "browser Sans through SDL_ttf compatibility, no bundled font"
+}

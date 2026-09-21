@@ -1,0 +1,18 @@
+{
+  "classic.mjs": {
+    "bytes": 121773,
+    "sha256": "b4cecbf403e8fbfc0f5fd0cdad778849fc14b88420fac5d8079d1d119ba9bb9d"
+  },
+  "classic.wasm": {
+    "bytes": 242854,
+    "sha256": "c35dbb499b5a31ae706a50aa556230470217e3664224c312743f8bb99217ad52"
+  },
+  "synth.mjs": {
+    "bytes": 150705,
+    "sha256": "e910934803223208a644faab11025075aaa49f1466c19bfe4e28fcc394f2fa7d"
+  },
+  "scores.json": {
+    "bytes": 3712,
+    "sha256": "2ce59b463604268e737ada76275a4d5979adc481b1feeec5dea4341b77781b70"
+  }
+}

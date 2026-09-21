@@ -1,0 +1,4 @@
+import {build} from 'esbuild';import {fileURLToPath} from 'node:url';
+const root=fileURLToPath(new URL('../../',import.meta.url)),out=new URL('../../.vite/session61-runtime.mjs',import.meta.url);
+await build({stdin:{contents:`export {default as Controls} from './src/prototype/PaperTossControls';export {default as Ball} from './src/prototype/PaperTossBall';export * from './src/prototype/paperToss';export * from './src/prototype/paperTossTarget';export * from './src/prototype/paperTossCamera';export * from './src/prototype/paperTossPhysics';export * from './src/prototype/paperTossCollision';export {paperGeometry} from './src/prototype/binGeometry';`,resolveDir:root},bundle:true,platform:'node',format:'esm',packages:'external',outfile:fileURLToPath(out)});
+export const api=await import(out.href);

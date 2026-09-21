@@ -1,0 +1,20 @@
+// Actual Three camera/ball/cue geometry, current exported scene triangles; offline only.
+import fs from 'node:fs';import {fileURLToPath} from 'node:url';import assert from 'node:assert/strict';import * as T from 'three';import {build} from 'esbuild';
+const dir=new URL('../../docs/redesign/session-57-paper-toss-view/',import.meta.url),bundle=new URL('../.vite/session57-camera.mjs',import.meta.url);
+await build({stdin:{contents:`export {tossPose,createTossCamera} from './src/prototype/paperTossCamera.js';export {TOSS,launchVelocity} from './src/prototype/paperTossPhysics.js';export {paperGeometry,BIN_SCALE,binInnerRadius} from './src/prototype/binGeometry.js';`,resolveDir:fileURLToPath(new URL('../',import.meta.url)),loader:'js'},bundle:true,platform:'node',format:'esm',packages:'external',outfile:fileURLToPath(bundle)});
+const api=await import(bundle.href);const {TOSS,tossPose,createTossCamera,paperGeometry,launchVelocity,BIN_SCALE,binInnerRadius}=api;
+const data=JSON.parse(fs.readFileSync(new URL('../session-56-shadow-continuity/current-scene.json',dir))),scene=new T.Scene();for(const m of data.meshes){const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(m.positions.flat(),3));g.setIndex(m.indices);const o=new T.Mesh(g,new T.MeshBasicMaterial({side:T.DoubleSide}));o.name=m.name;o.userData.root=m.root;scene.add(o)}scene.updateMatrixWorld(true);
+const launch=new T.Vector3(...TOSS.launch),ball=paperGeometry(7,[TOSS.radius,TOSS.radius,TOSS.radius]),ballPoints=[];for(let i=0;i<ball.attributes.position.count;i++)ballPoints.push(new T.Vector3().fromBufferAttribute(ball.attributes.position,i).add(launch));
+const envelope=[];for(let i=0;i<600;i++){const y=1-2*(i+.5)/600,phi=i*Math.PI*(3-Math.sqrt(5)),r=Math.sqrt(1-y*y);envelope.push(launch.clone().add(new T.Vector3(r*Math.cos(phi),y,r*Math.sin(phi)).multiplyScalar(TOSS.radius)))}
+const cuePoints=[];for(const h of [-20,-12,-8,0,12])for(const power of [0,50,100]){const cue=new T.ArrowHelper(launchVelocity(h,power).normalize(),launch,.5+.45*power/100,0xe4bc6a,.12,.07);cue.updateMatrixWorld(true);cue.traverse(o=>{if(!o.geometry)return;const p=o.geometry.attributes.position;for(let i=0;i<p.count;i++)cuePoints.push(new T.Vector3().fromBufferAttribute(p,i).applyMatrix4(o.matrixWorld))});cue.dispose()}
+const radius=BIN_SCALE*binInnerRadius(.76),rim=[];for(let i=0;i<128;i++)rim.push(new T.Vector3(TOSS.bin[0]+radius*Math.cos(i*Math.PI/64),TOSS.rim+.01,TOSS.bin[2]+radius*Math.sin(i*Math.PI/64)));
+
+const target=new T.Vector3(TOSS.bin[0],TOSS.rim,TOSS.bin[2]),forward=target.clone().sub(launch).setY(0).normalize(),points=[...envelope.filter((_,i)=>i%10===0),...cuePoints,...rim.filter((_,i)=>i%4===0)],ray=new T.Raycaster(),found=[];
+for(const back of [0,.5,1,1.5])for(const up of [2.2,3,3.5,4])for(const front of [.3,.6,.9,1.2])for(const weight of [.25,.4,.6,.8,1])for(const down of [0,-.5,-1,-1.5]){
+ const eye=launch.clone().addScaledVector(forward,-back).add(new T.Vector3(0,up,front)),look=launch.clone().lerp(target,weight);look.y+=down;
+ const c=new T.PerspectiveCamera(39,320/500,.1,100);c.position.copy(eye);c.lookAt(look);c.updateMatrixWorld();let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;for(const p of points){const q=p.clone().project(c);minX=Math.min(minX,q.x);maxX=Math.max(maxX,q.x);minY=Math.min(minY,q.y);maxY=Math.max(maxY,q.y)}
+ const gap=Math.min((minX+1)*160,(1-maxX)*160,(1-maxY)*250-64,340-(1-minY)*250);if(gap<8)continue;
+ let blocked=0;for(const p of rim){const d=p.clone().sub(eye),distance=d.length();ray.set(eye,d.normalize());ray.far=distance-.002;if(ray.intersectObjects(scene.children,false).some(h=>h.object.userData.root!=='bin'))blocked++}if(blocked)continue;
+ found.push({back,up,front,weight,down,eye:eye.toArray(),look:look.toArray(),gap,launchDistance:eye.distanceTo(launch),bounds:[minX,maxX,minY,maxY]});
+}
+found.sort((a,b)=>a.launchDistance-b.launchDistance||b.gap-a.gap);fs.writeFileSync(new URL('candidate-search.json',dir),JSON.stringify(found.slice(0,15),null,2));console.log(found.slice(0,6));

@@ -1,0 +1,12 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';import postcss from 'postcss';
+const dir=new URL('../../docs/redesign/session-27-desktop-marquee/',import.meta.url),src=new URL('../src/prototype/',import.meta.url);
+const css=fs.readFileSync(new URL('workspace.css',src),'utf8'),before=fs.readFileSync(new URL('before-workspace.css',dir),'utf8');assert.ok(css.startsWith(before),'all prior CSS is byte-identical');
+const added=postcss.parse(css.slice(before.length)),rules={};added.walkRules(r=>{if(!r.selector.includes('paper-toss')&&!r.selector.includes('toss-'))rules[r.selector]=Object.fromEntries(r.nodes.filter(n=>n.type==='decl').map(n=>[n.prop,n.value]));});
+assert.deepEqual(Object.keys(rules),['.mac-desktop > .desktop-items','.desktop-marquee','.mac-desktop > .desktop-items:focus-visible']);
+assert.equal(rules['.desktop-marquee']['pointer-events'],'none');assert.equal(rules['.mac-desktop > .desktop-items']['z-index'],'0');assert.equal(rules['.mac-desktop > .desktop-items'].overflow,'hidden');
+const effective={};postcss.parse(css).walkRules(r=>{effective[r.selector]={...effective[r.selector],...Object.fromEntries(r.nodes.filter(n=>n.type==='decl').map(n=>[n.prop,n.value]))};});assert.equal(effective['.desktop-items > button'].width,'80px');assert.equal(effective['.desktop-items > button'].height,'82px');assert.equal(effective['.desktop-items > button']['touch-action'],'pinch-zoom');assert.equal(effective['.desktop-items'].inset,'0');assert.equal(effective['.desktop-items'].display,'block');assert.ok(Number(effective['.mac-menu-bar']['z-index'])>0);assert.ok(Number(effective['.icon-dock']['z-index'])>0);assert.equal(rules['.mac-desktop > .desktop-items']['touch-action'],undefined);
+// Session 28 legitimately changes physical-scene/audio ownership in this parent.
+// Keep the exact preservation assertion on the complete desktop integration.
+const desktop=s=>s.match(/<MacDesktop[\s\S]*?\/>/)[0];
+const p=fs.readFileSync(new URL('Prototype.jsx',src),'utf8');assert.equal(desktop(p).replace('                desktopBlocked={nav}\n',''),desktop(fs.readFileSync(new URL('before-Prototype.jsx',dir),'utf8')),'desktop props/state/projection wiring preserved, with Explore cancellation');
+console.log('PASS prior CSS/desktop integration intact; new layer clipped below existing menu/dock, pointer transparent, icon metrics/touch and readable selection styles retained.');

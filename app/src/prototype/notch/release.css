@@ -1,0 +1,86 @@
+/* Source baseline: Notch 1.3.2 (ccacd97), Theme / Components / BottomNav.
+   System font uses SF on Apple platforms. No bundled font substitution. */
+.notch-demo { font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; font-size: 15px; --n-soft: #e0e3e9; }
+.notch-demo.n-dark { --n-soft: #242a34; }
+.notch-demo .n-status { height: 59px; padding: 18px 29px 0; font-size: 15px; }
+.notch-demo .n-status span { font-size: 10px; padding-top: 5px; }
+.notch-demo .n-scroll { height: calc(100% - 149px); padding: 8px 16px 34px; min-width: 0; }
+.notch-demo .n-top { gap: 8px; margin: 2px 0 18px; }
+.notch-demo .n-top > div { min-width: 0; }
+.notch-demo .n-top small { font-size: 13px; line-height: 1.4; }
+.notch-demo .n-top h1 { font-size: 26px !important; letter-spacing: -.5px; margin: 2px 0 0; font-weight: 700; }
+.workspace .notch-demo .n-primary { font-size: 13px; padding: 10px 14px; gap: 6px; min-height: 38px; }
+.notch-demo .n-search { padding: 3px 14px; margin-bottom: 18px; }
+.workspace .notch-demo .n-search input { font-size: 15px; padding: 8px 0; }
+.notch-demo .n-card { border: 0; border-radius: 20px; padding: 16px; margin: 18px 0; }
+.notch-demo .n-card > header { font-size: 14px; margin-bottom: 12px; align-items: baseline; gap: 8px; }
+.notch-demo .n-card header > span { font-size: 12px; }
+.notch-demo .n-card p { font-size: 14px !important; line-height: 1.5; }
+.notch-demo .n-card small { font-size: 12px; }
+.notch-demo h2 { font-size: 13px; font-weight: 800; letter-spacing: .6px; margin: 22px 0 10px; }
+.notch-demo h2 button { font-size: 12px; }
+.notch-demo .n-row { min-height: 54px; gap: 11px; }
+.notch-demo .n-row:first-child { border-top: 0; }
+.notch-demo .n-row-title { font-size: 15px; }
+.notch-demo .n-row-title small { font-size: 12px; }
+.notch-demo .n-check { width: 24px; height: 24px; flex: 0 0 24px; }
+.notch-demo .n-next strong { font-size: 23px; line-height: 1.25; }
+.notch-demo .n-next { align-items: flex-start; }
+.notch-demo .n-emphasis { font-size: 18px !important; color: var(--n-text) !important; }
+.notch-demo .n-snapshot { gap: 8px; }
+.notch-demo .n-snapshot button { padding: 16px; border-radius: 20px; }
+.notch-demo .n-snapshot span { font-size: 12px; }
+.notch-demo .n-snapshot strong { font-size: 24px; }
+.notch-demo .n-nav { height: 90px; padding: 8px 16px 34px; overflow: visible; background: var(--n-bg); }
+.notch-demo .n-nav-items { display: flex; width: 100%; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity; overscroll-behavior-x: contain; }
+.workspace .notch-demo .n-nav button { min-width: 0; flex: 0 0 calc(100% / 6); height: 47px; padding: 4px 0; gap: 4px; scroll-snap-align: start; }
+.notch-demo .n-nav span { font-size: 10px; font-weight: 600; white-space: nowrap; }
+.notch-demo .n-nav [aria-current="page"] svg { stroke-width: 2; }
+.notch-demo .n-nav::after { content: ''; position: absolute; bottom: 8px; left: 34%; width: 32%; height: 5px; border-radius: 9px; background: var(--n-text); pointer-events: none; }
+.notch-demo .n-notice { bottom: 97px; font-size: 13px; }
+.notch-demo .n-sheet { bottom: 0; padding-bottom: 34px; border-radius: 26px 26px 0 0; }
+.workspace .notch-demo input, .workspace .notch-demo textarea, .workspace .notch-demo select { max-width: 100%; min-width: 0; font-family: inherit; }
+.notch-demo .n-form label { font-size: 13px; }
+.notch-demo .n-form input, .notch-demo .n-form textarea, .notch-demo .n-form select { font-size: 15px; }
+.notch-demo .n-money { display: block; font-size: 38px; font-weight: 700; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
+.notch-demo .finance-period { margin: 0; font-size: 0; }
+.notch-demo .finance-period select { font-size: 12.5px; border: 0; background: var(--n-soft); border-radius: 30px; padding: 6px 10px; }
+.notch-demo .compact-chart { padding: 0; border: 0; margin: 12px 0 0; background: transparent; }
+.notch-demo .compact-chart figcaption, .notch-demo .compact-chart .chart-controls { display: none; }
+.notch-demo .interactive-chart .chart-line { stroke: #47dc9a; }
+.notch-demo .interactive-chart .chart-point { fill: #47dc9a; }
+.notch-demo .interactive-chart svg { width: 100%; }
+.notch-demo .interactive-chart output { font-size: 12px; }
+.notch-demo .n-stat-grid { gap: 8px; }
+.notch-demo .n-stat-grid .n-card { margin: 0; }
+.notch-demo .n-stat-grid strong { font-size: 22px; }
+.notch-demo .finance-navigation { min-height: 52px; font-size: 15px; }
+.notch-demo .n-capture { display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 16px; min-height: 56px; background: var(--n-card); border-radius: 16px; margin: 18px 0; }
+.workspace .notch-demo .n-capture input { flex: 1; width: 0; background: transparent; border: 0; padding: 6px 0; font-size: 16px; color: var(--n-text); }
+.notch-demo .n-reminder-counts { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 8px; }
+.workspace .notch-demo .n-reminder-counts button { display: flex; flex-direction: column; gap: 3px; align-items: flex-start; padding: 11px 12px; border-radius: 16px; background: var(--n-card); }
+.notch-demo .n-reminder-counts b { font-size: 22px; font-variant-numeric: tabular-nums; }
+.notch-demo .n-reminder-counts span { font-size: 11.5px; color: var(--n-muted); }
+.notch-demo .n-list-row { display: flex; align-items: center; border-bottom: 1px solid var(--n-line); }
+.notch-demo .n-list-row:last-child { border-bottom: 0; }
+.notch-demo .n-list-row > button:first-child { display: flex; align-items: center; gap: 12px; min-height: 48px; flex: 1; padding: 0; text-align: left; }
+.notch-demo .n-list-row i { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.notch-demo .n-list-row strong { font-size: 15px; flex: 1; }
+.notch-demo .n-list-row span { font-size: 14px; color: var(--n-muted); }
+.notch-demo .n-class-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+.notch-demo .n-class-grid .n-card { margin: 0; padding: 12px 8px; min-width: 0; }
+.workspace .notch-demo .n-class { min-height: 118px; width: 100%; text-align: left; padding: 0 0 0 8px; border-left-width: 5px; }
+.notch-demo .n-class strong { font-size: 15px; line-height: 1.3; }
+.notch-demo .n-class span, .notch-demo .n-class small { font-size: 11.5px; }
+.notch-demo .n-completion { align-items: center; gap: 16px; }
+.notch-demo .n-completion > strong { font-size: 36px; }
+.notch-demo .n-bars { min-width: 0; flex: 1; }
+.notch-demo .n-bars progress { width: 100%; height: 9px; }
+.notch-demo .n-school-facts { display: flex; justify-content: space-between; margin-top: 16px; font-size: 12px; color: var(--n-muted); }
+.notch-demo .n-school-facts b { display: block; color: var(--n-text); font-size: 18px; }
+
+.notch-demo .n-top-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.workspace .notch-demo .n-search-toggle { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: var(--n-soft); }
+.notch-demo .n-category-spend { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin: 14px 0; font-size: 13px; }
+.notch-demo .n-category-spend progress { grid-column: 1 / -1; width: 100%; height: 5px; accent-color: #47dc9a; }
+.notch-demo .n-bars span { font-size: 11.5px; }

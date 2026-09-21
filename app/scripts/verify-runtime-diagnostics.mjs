@@ -1,0 +1,24 @@
+import assert from 'node:assert/strict';import fs from 'node:fs';import {build} from 'esbuild';import {fileURLToPath} from 'node:url';
+import {createRuntimeDiagnostics,tracePointer,downloadRuntimeReport} from '../src/prototype/runtimeDiagnostics.js';
+import {AudioMock} from './support/fan-audio-mock.mjs';import {mountFan} from './support/fan-scene-fixture.mjs';
+let now=0;const trace=createRuntimeDiagnostics(()=>now);trace.observe(()=>({view:'desk',width:1440,on:true,text:'PRIVATE',email:'PRIVATE',key:'PRIVATE',typed:'PRIVATE'}));
+assert.equal(trace.enabled,false);trace.record('pointer',{reason:'off'});assert.equal(trace.report().records.length,0);trace.start();
+for(let i=0;i<2000;i++){now=i;trace.sample('fan-frame',{frames:i,power:.8,phase:i,reason:'advanced',text:'PRIVATE'});}
+assert.equal(trace.report().records.filter(r=>r.kind==='fan-frame').length,2);assert.equal(trace.report().frameAgeMs,0);
+tracePointer({trace},'laptop',{type:'pointerup',pointerId:1,isTrusted:true,clientX:20,clientY:30,timeStamp:150,target:{tagName:'CANVAS',textContent:'PRIVATE',closest:()=>false}},'activate-laptop',{time:100});
+assert.equal(trace.report().records.at(-1).elapsed,50);assert.equal(trace.report().records.at(-1).target,'canvas');
+for(let i=0;i<300;i++)trace.record('pointer',{reason:'bounded'});assert.equal(trace.report().records.length,256);assert.ok(!JSON.stringify(trace.report()).includes('PRIVATE'));
+trace.stop();const records=trace.report().records.length;trace.record('ignored');assert.equal(trace.report().records.length,records);trace.start();assert.equal(trace.report().records.length,2);
+let clicked=0,revoked=0,blob;const oldURL=globalThis.URL,oldDocument=globalThis.document;
+globalThis.URL={createObjectURL(b){blob=b;return 'blob:local';},revokeObjectURL(u){assert.equal(u,'blob:local');revoked++;}};globalThis.document={createElement:tag=>{assert.equal(tag,'a');return {click(){clicked++;assert.ok(this.download.startsWith('portfolio-runtime-s36-'));}}}};
+downloadRuntimeReport(trace);await new Promise(r=>setTimeout(r,10));assert.equal(clicked,1);assert.equal(revoked,1);assert.equal(JSON.parse(await blob.text()).revision,trace.revision);globalThis.URL=oldURL;globalThis.document=oldDocument;
+const out=new URL('../.vite/diagnostics-audio.mjs',import.meta.url);await build({entryPoints:[fileURLToPath(new URL('../src/prototype/fanSound.js',import.meta.url))],bundle:true,format:'esm',platform:'node',outfile:fileURLToPath(out)});const {createFanAudio}=await import(out.href);
+const context=new AudioMock();context.state='running';const s={on:true,visible:true,switchEligible:true,reduced:false,preferences:{muted:false,volume:.4}};const audio=createFanAudio(()=>s,{context:()=>context,subscribe:()=>()=>{},unlock:async()=>true},trace);audio.mount();
+const input={trace,hidden:false},f=mountFan({input,audio});let initialVoice;
+for(const view of ['desk','laptop','phone','printer','paper']){f.render({view});for(let i=0;i<20;i++){now+=120;f.frame(.12);context.advance(context.currentTime+.12);}assert.ok(audio.diagnosticState().power>.99);initialVoice??=audio.diagnosticState().voice;assert.equal(audio.diagnosticState().voice,initialVoice);}
+const samples=trace.report().records.filter(r=>r.kind==='fan-frame');assert.equal(new Set(samples.map(r=>r.instance)).size,1);assert.ok(samples.some(r=>r.view==='phone'&&r.reason==='advanced'));assert.ok(samples.every(r=>r.maxDelta===.12));
+s.on=false;await audio.toggle(false);f.render({on:false});for(let i=0;i<65;i++){now+=120;f.frame(.12);context.advance(context.currentTime+.12);}assert.equal(audio.diagnosticState().power,0);assert.equal(audio.diagnosticState().voice,0);assert.ok(trace.report().records.some(r=>r.kind==='fan-audio'&&r.reason==='zero-power'));
+s.on=true;f.render({on:true});for(let i=0;i<20;i++){now+=16;f.frame(.016);}context.state='suspended';audio.sync();assert.equal(audio.diagnosticState().context,'suspended');assert.ok(trace.report().records.some(r=>r.reason==='context-not-running'));
+context.state='running';audio.sync();input.hidden=true;audio.pageHidden(true);now+=1000;f.frame(.1);context.advance(context.currentTime+.2);assert.equal(audio.diagnosticState().voice,0);assert.equal(trace.report().records.filter(r=>r.kind==='fan-frame').at(-1).reason,'hidden');audio.dispose();assert.ok(context.nodes.every(n=>!n.connected));trace.dispose();assert.equal(trace.report().records.length,0);
+console.log('PASS opt-in/privacy/bounded sampling/export cleanup; actual DeskFan frame + audio owner slow cross-view continuity, once voice, off-zero/silence, context/hidden reasons (mock audio/React, no native listening).');
+fs.writeFileSync(new URL('../../docs/redesign/session-36-runtime/diagnostics-checks.json',import.meta.url),JSON.stringify({pass:true,revision:trace.revision,boundary:'Source + actual frame/audio callbacks with mocked React/audio; export Blob/DOM mocked; not native browser'},null,2)+'\n');

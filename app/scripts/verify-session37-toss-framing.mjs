@@ -1,0 +1,18 @@
+// Projection of actual runtime flights (including all 50 controls-range samples).
+import fs from 'node:fs';import assert from 'node:assert/strict';import * as T from 'three';import {deskPose} from '../src/prototype/deskCamera.js';
+const dir=new URL('../../docs/redesign/session-37-props/',import.meta.url),data=JSON.parse(fs.readFileSync(new URL('physics.json',dir))),rows=[];
+assert.equal(data.grid.length,50);assert.ok(data.grid.every(r=>r.path?.length>1));
+for(const size of [{width:1440,height:900},{width:1920,height:1080},{width:900,height:700},{width:800,height:500}]){
+ const pose=deskPose(size),camera=new T.PerspectiveCamera(39,size.width/size.height,.1,100);camera.position.copy(pose.position);camera.lookAt(pose.look);camera.updateMatrixWorld();
+ const project=p=>{const q=new T.Vector3(...p).project(camera);return [(q.x+1)*size.width/2,(1-q.y)*size.height/2]};
+ const panel={left:size.width-258,top:size.height-340,width:236,height:308};let min=Infinity,gap=Infinity;
+ const paths=[...['off','on','miss','peel'].map(k=>data[k].path),...data.grid.map(r=>r.path)];
+ for(const path of paths)for(const p of path){const points=Array.from({length:8},(_,i)=>project(p.map((v,k)=>v+((i>>k)&1?.18:-.18)))),lo=[Math.min(...points.map(p=>p[0])),Math.min(...points.map(p=>p[1]))],hi=[Math.max(...points.map(p=>p[0])),Math.max(...points.map(p=>p[1]))];
+ min=Math.min(min,lo[0],lo[1],size.width-hi[0],size.height-hi[1]);assert.ok(min>8,'whole ball visible '+JSON.stringify({size,p,lo,hi}));
+ const distance=Math.max(panel.left-hi[0],lo[0]-panel.left-panel.width,panel.top-hi[1],lo[1]-panel.top-panel.height);gap=Math.min(gap,distance);assert.ok(distance>8,'ball/panel clear');}
+ const rim=Array.from({length:65},(_,i)=>[-5.95+.756*Math.cos(i*Math.PI/32),-4.704,3.1+.756*Math.sin(i*Math.PI/32)]);for(const p of rim){const [x,y]=project(p);assert.ok(x>8&&y>8&&x<size.width-8&&y<size.height-8);assert.ok(x<panel.left-8||y<panel.top-8);}
+ const poly=p=>p.map(v=>project(v).map(x=>x.toFixed(2)).join(',')).join(' '),colors=['#147c65','#c66312','#72809c','#b64c58'];
+ const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${size.width}" height="${size.height}"><rect width="100%" height="100%" fill="#f4f2ed"/><g font-family="monospace" font-size="12"><text x="16" y="24">OFFLINE PROJECTION / Session 37 / ${size.width} × ${size.height}</text><text x="16" y="43">Actual runtime paths; 0.18-unit ball bounds tested. Not native UI.</text><polygon points="${poly([[-5.4,0,-3],[5.4,0,-3],[5.4,0,3],[-5.4,0,3]])}" fill="#dbd9d0"/>${paths.slice(4).map(p=>`<polyline points="${poly(p)}" fill="none" stroke="#a5a8a6" stroke-width="1"/>`).join('')}${paths.slice(0,4).map((p,i)=>`<polyline points="${poly(p)}" fill="none" stroke="${colors[i]}" stroke-width="2"/>`).join('')}<polyline points="${poly(rim)}" fill="none" stroke="#333" stroke-width="2"/><rect x="${panel.left}" y="${panel.top}" width="236" height="308" fill="#101713"/><text x="${panel.left+12}" y="${panel.top+24}" fill="white">Conservative control panel</text></g></svg>`;
+ fs.writeFileSync(new URL(`toss-${size.width}.svg`,dir),svg);rows.push({size,flights:paths.length,minimumBallMargin:min,minimumPanelGap:gap,panel,launch:project([-1.8,1.1,3.65]),rim:rim.map(project)});
+}
+fs.writeFileSync(new URL('toss-framing.json',dir),JSON.stringify({rows,evidence:'Runtime trajectories + full-ball conservative projection; 308px panel reservation is not measured DOM. No physics change.'},null,2));console.log('PASS 54 runtime paths × four viewports, complete ball and rim visible, panel clear.',rows.map(r=>({size:r.size,margin:r.minimumBallMargin,gap:r.minimumPanelGap})));

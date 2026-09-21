@@ -1,0 +1,20 @@
+// Actual game + Prototype capture/bubble callbacks. Modeled focus, not native delivery.
+import {build} from 'esbuild';import fs from 'node:fs';import path from 'node:path';import {fileURLToPath,pathToFileURL} from 'node:url';
+const root=fileURLToPath(new URL('../',import.meta.url));
+const support=fs.readFileSync(path.join(root,'scripts/support/phone-escape-cases.js'),'utf8').split("check('pickup")[0];
+const source=support+String.raw`
+import CatMario from './src/prototype/apps/CatMario';
+globalThis.ResizeObserver=class{observe(){}disconnect(){}};
+const s=setup('#catmario');s.doc.addEventListener=()=>{};s.doc.removeEventListener=()=>{};
+const game=harness(CatMario,{gameEligible:true,gameLifecycle:{},sound:desktop(s).props.sound,onMaximize(){},maximized:false});
+const canvas={owned:true,focus(){s.doc.activeElement=this;}},region={contains:n=>!!n?.owned};const layout=[];
+const render=()=>{game.render();for(const n of nodes(game.tree)){if(n.type==='canvas')n.props.ref.current=canvas;else if(n.props.className==='cat-play-region')n.props.ref.current=region;else if(n.props.className==='cat-stage')n.props.ref.current={clientWidth:600,clientHeight:380};else if(n.props.ref)n.props.ref.current={focus(){}};}if(!layout.length)for(const f of game.effects)layout.push(f());game.flushEffects();};
+render();globalThis.catNavigationOwner.ready();render();render();find(game,n=>n.type==='button'&&text(n)==='Start').props.onClick();render();
+const press=extra=>{const e={key:'Escape',target:canvas,repeat:false,nativeEvent:{},defaultPrevented:false,stopped:false,preventDefault(){this.defaultPrevented=true;},stopPropagation(){this.stopped=true;},...extra};s.h.tree.props.onKeyDownCapture(e);if(!e.stopped)find(game,n=>n.props.className==='cat-play-region').props.onKeyDown(e);if(!e.stopped)s.h.tree.props.onKeyDown(e);s.render();render();return e;};
+assert.equal(view(s),'laptop');press();assert.equal(globalThis.catNavigationOwner.phase(),'paused');assert.equal(view(s),'laptop');for(const e of [{repeat:true},{isComposing:true},{nativeEvent:{isComposing:true}},{keyCode:229}]){press(e);assert.equal(view(s),'laptop');}press();assert.equal(view(s),'desk');assert.equal(s.pushes.at(-1),'#desk');
+for(const slot of game.slots)slot.cleanup?.();for(const cleanup of layout)cleanup?.();for(const slot of s.h.slots)slot.cleanup?.();
+console.log('PASS actual Cat Mario pause Escape, parent held/IME guards, then fresh Escape returns to desk; modeled routing only');
+`;
+const output=path.join(root,'.vite/classic-navigation-test.mjs');
+await build({stdin:{contents:source,resolveDir:root,loader:'jsx'},bundle:true,platform:'node',format:'esm',packages:'external',outfile:output,define:{'import.meta.env.BASE_URL':'"/"'},plugins:[{name:'test-boundaries',setup(b){b.onResolve({filter:/^react$/},()=>({path:path.join(root,'scripts/support/hook-harness.js')}));b.onResolve({filter:/catMarioRuntime$/},()=>({path:'runtime',namespace:'mock'}));b.onResolve({filter:/^@react-three\/drei$/},()=>({path:'progress',namespace:'mock'}));b.onResolve({filter:/Scene$/},()=>({path:'scene',namespace:'mock'}));b.onLoad({filter:/.*/,namespace:'mock'},a=>({contents:a.path==='scene'?'export default function Scene(){}':a.path==='progress'?'export const useProgress=()=>({active:false,loaded:0,total:0,errors:[]});':`export const classicAsset=n=>'/prototype-vendor/cat-mario/'+n;export function createClassicRuntime(p){let phase='loading';const o={ready(){phase='ready';p.notify({phase,atTitle:true});},phase:()=>phase,start(){if(p.eligible()){phase='playing';p.notify({phase,atTitle:true});}},pause(){if(phase==='playing'){phase='paused';p.notify({phase,atTitle:true});}},key(){},preferences(){},dispose(){o.pause();}};globalThis.catNavigationOwner=o;return o;}`}));b.onResolve({filter:/\?raw$/},a=>({path:path.resolve(a.resolveDir,a.path.slice(0,-4)),namespace:'raw'}));b.onLoad({filter:/.*/,namespace:'raw'},a=>({contents:fs.readFileSync(a.path,'utf8'),loader:'text'}));}}],loader:{'.css':'empty','.png':'dataurl','.jpg':'dataurl','.pdf':'dataurl'}});
+await import(pathToFileURL(output));
