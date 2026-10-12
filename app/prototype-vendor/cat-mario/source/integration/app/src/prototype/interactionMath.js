@@ -8,6 +8,7 @@ export const desktopIds = [
   "preview",
   "mail",
   "catmario",
+  "github",
 ];
 export function clampIcon(p, size) {
   return {

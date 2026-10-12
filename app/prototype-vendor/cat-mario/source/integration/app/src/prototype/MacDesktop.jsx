@@ -345,7 +345,9 @@ export default function MacDesktop({
       <DesktopItems controller={desktopItems} host={host} size={size}
         enabled={enabled && !desktopBlocked && !menu && !calendar}
         activate={() => { /* The desktop pointer owner already supplies paired feedback. */ }}
-        launch={id => id === "preview" ? onResume() : open(id)} />
+        launch={id => registry[id]?.url
+          ? window.open(registry[id].url, "_blank", "noopener,noreferrer")
+          : id === "preview" ? onResume() : open(id)} />
       {manager.windows.map((w) => (
         <WorkspaceWindow
           key={w.id}

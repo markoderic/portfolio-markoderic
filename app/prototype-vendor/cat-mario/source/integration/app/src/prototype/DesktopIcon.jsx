@@ -4,7 +4,7 @@ import { selectionModifier } from './desktopSelection';
 export default function DesktopIcon({id,enabled=true,position,selected,select,launch,activate,begin,suppress,keyboardMove}) {
  const title=id==='preview'?'Resume':registry[id].name;
  return <button className={selected?'selected':''} data-launcher={id} style={{left:position.x,top:position.y}}
-  aria-label={title} aria-pressed={selected} title={`${title} · double-click to open · Alt + arrows to move`}
+  aria-label={registry[id].url ? `${title} (opens in a new tab)` : title} aria-pressed={selected} title={`${title} · double-click to open${registry[id].url ? ' in a new tab' : ''} · Alt + arrows to move`}
   onPointerDown={e=>begin(id,e)}
   onClick={e=>{
    if(!enabled||suppress(e))return;
